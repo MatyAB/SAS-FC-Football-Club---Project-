@@ -5,8 +5,7 @@ package com.sasfc.api.model;
 import com.sasfc.api.model.enums.PlayerPosition;
 import com.sasfc.api.model.enums.TeamCategory;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
 import java.util.Date;
 import java.util.UUID;
 
