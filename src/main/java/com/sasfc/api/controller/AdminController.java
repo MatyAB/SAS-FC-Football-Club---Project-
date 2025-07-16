@@ -68,4 +68,9 @@ public class AdminController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(roles);
     }
+
+
+    //     "name": "Super Admin",
+    // "email": "admin@sasfc.com",
+    // "password": "strongPassword!@#"
 }
