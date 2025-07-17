@@ -8,10 +8,13 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.sasfc.api.model.enums.NewsCategory;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "news")
-
+@Getter
+@Setter
 public class News {
 
     @Id

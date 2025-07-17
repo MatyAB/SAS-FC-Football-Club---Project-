@@ -41,7 +41,7 @@ public class ContentMapper {
         dto.setCompetition(match.getCompetition());
         dto.setHomeScore(match.getHomeScore());
         dto.setAwayScore(match.getAwayScore());
-        dto.setStatus(match.getStatus());
+        dto.setStatus(match.getStatus() != null ? match.getStatus().name() : null);
         dto.setMatchReport(match.getMatchReport());
         return dto;
     }
@@ -63,7 +63,7 @@ public class ContentMapper {
         dto.setUrl(image.getUrl());
         dto.setThumbnailUrl(image.getThumbnailUrl());
         dto.setCaption(image.getCaption());
-        dto.setCategory(image.getCategory());
+        dto.setCategory(image.getCategory() != null ? image.getCategory().name() : null);
         if (image.getUploader() != null) {
             dto.setUploaderName(image.getUploader().getName());
         }
