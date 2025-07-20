@@ -16,6 +16,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+
+
+
+        
     }
 
     @Bean
@@ -29,14 +33,9 @@ public class SecurityConfig {
             
             // 3. Define the authorization rules for different endpoints
             .authorizeHttpRequests(auth -> auth
-                // TEMPORARILY permit all requests to /api/admin/** for testing
-                .requestMatchers("/api/admin/**").permitAll() 
-                
-                // Allow access to Swagger UI without authentication
-                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                
-                // Any other request must be authenticated (this will be the default)
-                .anyRequest().authenticated() 
+                .requestMatchers("/api/auth/login").permitAll() // Allow login endpoint
+                .requestMatchers("/api/admin/**").permitAll()   // (if you want admin open for now)
+                .anyRequest().authenticated()
             );
 
         return http.build();
