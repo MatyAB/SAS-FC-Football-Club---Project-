@@ -5,6 +5,7 @@ import com.sasfc.api.model.GalleryImage;
 import com.sasfc.api.model.Match;
 import com.sasfc.api.model.News;
 import com.sasfc.api.model.Team;
+import com.sasfc.api.model.User;
 
 public class ContentMapper {
 
@@ -24,6 +25,21 @@ public class ContentMapper {
         dto.setPublishedAt(news.getPublishedAt());
         dto.setCreatedAt(news.getCreatedAt());
         return dto;
+    }
+
+    public static News toNewsEntity(NewsDto dto, User author) {
+        News news = new News();
+        news.setId(dto.getId());
+        news.setTitle(dto.getTitle());
+        news.setExcerpt(dto.getExcerpt());
+        news.setContent(dto.getContent());
+        news.setCategory(dto.getCategory());
+        news.setImageUrl(dto.getImageUrl());
+        news.setFeatured(dto.isFeatured());
+        news.setPublishedAt(dto.getPublishedAt());
+        news.setCreatedAt(dto.getCreatedAt());
+        news.setAuthor(author);
+        return news;
     }
 
     // --- Match ---
