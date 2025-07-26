@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/matches/**").permitAll()
                 .requestMatchers("/api/news/**").permitAll()
                 .requestMatchers("/api/teams/**").permitAll()
+                .requestMatchers("/api/players/**").permitAll()
                 .anyRequest().authenticated()
             );
 
