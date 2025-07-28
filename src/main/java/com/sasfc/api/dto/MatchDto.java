@@ -1,11 +1,10 @@
 package com.sasfc.api.dto;
 
 import java.util.Date;
-import java.util.UUID;
 import com.sasfc.api.dto.TeamDto;
 
 public class MatchDto {
-    private UUID id;
+    private Long id;
     private TeamDto homeTeam;
     private TeamDto awayTeam;
     private Date matchDateTime;
@@ -16,8 +15,8 @@ public class MatchDto {
     private String status;
     private String matchReport;
     // Getters and setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public TeamDto getHomeTeam() { return homeTeam; }
     public void setHomeTeam(TeamDto homeTeam) { this.homeTeam = homeTeam; }
     public TeamDto getAwayTeam() { return awayTeam; }

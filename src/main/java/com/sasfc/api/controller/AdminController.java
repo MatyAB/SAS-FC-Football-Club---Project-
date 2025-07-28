@@ -29,7 +29,7 @@ public class AdminController {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
 
-    
+
     public AdminController(UserService userService, RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
@@ -144,4 +144,5 @@ public class AdminController {
     //     "name": "Super Admin",
     // "email": "admin@sasfc.com",
     // "password": "strongPassword!@#"
+    
 }
