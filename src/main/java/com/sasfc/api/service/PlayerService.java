@@ -6,6 +6,8 @@ import com.sasfc.api.model.Player;
 import com.sasfc.api.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +19,10 @@ public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
-    public Player createPlayer(PlayerDto playerDto) {
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    public Player createPlayer(PlayerDto playerDto, MultipartFile image) {
         Player player = new Player();
         player.setName(playerDto.getName());
         player.setPosition(playerDto.getPosition());
@@ -25,10 +30,19 @@ public class PlayerService {
         player.setAge(playerDto.getAge());
         player.setNationality(playerDto.getNationality());
         player.setBio(playerDto.getBio());
-        player.setImageUrl(playerDto.getImageUrl());
         player.setTeamCategory(playerDto.getTeamCategory());
         player.setJoinedDate(playerDto.getJoinedDate());
         player.setActive(playerDto.isActive());
+
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileStorageService.storeFile(image);
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/uploads/")
+                    .path(fileName)
+                    .toUriString();
+            player.setImageUrl(fileDownloadUri);
+        }
+
         return playerRepository.save(player);
     }
 
@@ -44,7 +58,7 @@ public class PlayerService {
         return toPlayerDto(player);
     }
 
-    public Player updatePlayer(UUID id, PlayerDto playerDto) {
+    public Player updatePlayer(UUID id, PlayerDto playerDto, MultipartFile image) {
         Player existingPlayer = playerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Player not found with id: " + id));
 
@@ -54,10 +68,19 @@ public class PlayerService {
         existingPlayer.setAge(playerDto.getAge());
         existingPlayer.setNationality(playerDto.getNationality());
         existingPlayer.setBio(playerDto.getBio());
-        existingPlayer.setImageUrl(playerDto.getImageUrl());
         existingPlayer.setTeamCategory(playerDto.getTeamCategory());
         existingPlayer.setJoinedDate(playerDto.getJoinedDate());
         existingPlayer.setActive(playerDto.isActive());
+
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileStorageService.storeFile(image);
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/uploads/")
+                    .path(fileName)
+                    .toUriString();
+            existingPlayer.setImageUrl(fileDownloadUri);
+        }
+
         return playerRepository.save(existingPlayer);
     }
 

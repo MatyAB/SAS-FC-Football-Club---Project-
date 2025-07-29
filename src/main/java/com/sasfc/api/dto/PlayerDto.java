@@ -4,6 +4,8 @@ import com.sasfc.api.model.enums.PlayerPosition;
 import com.sasfc.api.model.enums.TeamCategory;
 import lombok.Data;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -18,6 +20,7 @@ public class PlayerDto {
     private String bio;
     private String imageUrl;
     private TeamCategory teamCategory;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joinedDate;
     private boolean isActive;
 }

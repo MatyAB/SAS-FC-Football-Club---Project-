@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,8 +20,8 @@ public class PlayerController {
     private PlayerService playerService;
 
     @PostMapping
-    public ResponseEntity<Player> createPlayer(@RequestBody PlayerDto playerDto) {
-        Player createdPlayer = playerService.createPlayer(playerDto);
+    public ResponseEntity<Player> createPlayer(@ModelAttribute PlayerDto playerDto, @RequestParam("image") MultipartFile image) {
+        Player createdPlayer = playerService.createPlayer(playerDto, image);
         return new ResponseEntity<>(createdPlayer, HttpStatus.CREATED);
     }
 
@@ -37,8 +38,8 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Player> updatePlayer(@PathVariable UUID id, @RequestBody PlayerDto playerDto) {
-        Player updatedPlayer = playerService.updatePlayer(id, playerDto);
+    public ResponseEntity<Player> updatePlayer(@PathVariable UUID id, @ModelAttribute PlayerDto playerDto, @RequestParam(value = "image", required = false) MultipartFile image) {
+        Player updatedPlayer = playerService.updatePlayer(id, playerDto, image);
         return ResponseEntity.ok(updatedPlayer);
     }
 

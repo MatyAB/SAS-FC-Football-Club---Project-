@@ -122,7 +122,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Transactional
     private void createUserIfNotFound(String username, String email, String password, Role role) {
-        userRepository.findByUsername(username)
+        userRepository.findByEmail(email)
             .ifPresentOrElse(
                 user -> {}, // Do nothing if user exists
                 () -> {
