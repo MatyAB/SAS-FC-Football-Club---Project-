@@ -3,19 +3,21 @@ package com.sasfc.api.util;
 import com.sasfc.api.model.Permission;
 import com.sasfc.api.model.Role;
 import com.sasfc.api.repository.PermissionRepository;
-import com.sasfc.api.model.Permission;
-import com.sasfc.api.model.Role;
 import com.sasfc.api.model.Team;
+import com.sasfc.api.model.User;
 import com.sasfc.api.model.enums.TeamCategory;
-import com.sasfc.api.repository.PermissionRepository;
 import com.sasfc.api.repository.RoleRepository;
 import com.sasfc.api.repository.TeamRepository;
+import com.sasfc.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +32,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private TeamRepository teamRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -58,11 +66,16 @@ public class DataInitializer implements CommandLineRunner {
             playerRead, playerWrite, newsRead, newsWrite, matchRead, matchWrite,
             galleryRead, galleryWrite, userManage
         ));
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("ADMIN role not found!"));
         createRoleIfNotFound("ROLE_ADMIN", adminPermissions);
 
+        // --- Create Admin User ---
+        createUserIfNotFound("admin", "admin@sasfc.com", "password", adminRole);
+
         // --- Create Teams ---
-        createTeamIfNotFound("SAS FC", "SAS", "sas_fc_logo.png", 2000, "SAS Arena", TeamCategory.FIRST_TEAM);
-        createTeamIfNotFound("Addis FC", "ADFC", "addis_fc_logo.png", 1995, "Addis Ababa Stadium", TeamCategory.FIRST_TEAM);
+      //  createTeamIfNotFound("SAS FC", "SAS", "sas_fc_logo.png", 2000, "SAS Arena", TeamCategory.FIRST_TEAM);
+     //   createTeamIfNotFound("Addis FC", "ADFC", "addis_fc_logo.png", 1995, "Addis Ababa Stadium", TeamCategory.FIRST_TEAM);
     }
 
     @Transactional
@@ -93,7 +106,7 @@ public class DataInitializer implements CommandLineRunner {
     private void createTeamIfNotFound(String name, String shortName, String logoUrl, int foundedYear, String homeStadium, TeamCategory category) {
         teamRepository.findByName(name)
             .ifPresentOrElse(
-                team -> {}, // Do nothing if team exists
+                team -> {}, 
                 () -> {
                     Team team = new Team();
                     team.setName(name);
@@ -101,8 +114,24 @@ public class DataInitializer implements CommandLineRunner {
                     team.setLogoUrl(logoUrl);
                     team.setFoundedYear(foundedYear);
                     team.setHomeStadium(homeStadium);
-                    // team.setCategory(category); // Assuming TeamCategory will be added to Team model
+                    team.setCategory(category); 
                     teamRepository.save(team);
+                }
+            );
+    }
+
+    @Transactional
+    private void createUserIfNotFound(String username, String email, String password, Role role) {
+        userRepository.findByUsername(username)
+            .ifPresentOrElse(
+                user -> {}, // Do nothing if user exists
+                () -> {
+                    User user = new User();
+                    user.setName(username);
+                    user.setEmail(email);
+                    user.setPasswordHash(passwordEncoder.encode(password));
+                    user.setRoles(Collections.singleton(role));
+                    userRepository.save(user);
                 }
             );
     }

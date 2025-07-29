@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Useful for registration to check if an email is already taken
     Boolean existsByEmail(String email);
+
+    Optional<User> findByUsername(String username);
 }
