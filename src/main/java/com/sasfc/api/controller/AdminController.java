@@ -57,7 +57,7 @@ public class AdminController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
         User user = userService.findUserById(id);
         return ResponseEntity.ok(UserMapper.toUserDto(user));
     }
@@ -92,16 +92,16 @@ public class AdminController {
 
     @PostMapping("/roles/{roleId}/permissions/{permissionId}")
     public ResponseEntity<RoleDto> assignPermissionToRole(
-            @PathVariable Long roleId,
-            @PathVariable Long permissionId) {
+            @PathVariable Integer roleId,
+            @PathVariable Integer permissionId) {
         Role updatedRole = userService.assignPermissionToRole(roleId, permissionId);
         return ResponseEntity.ok(UserMapper.toRoleDto(updatedRole));
     }
 
     @DeleteMapping("/roles/{roleId}/permissions/{permissionId}")
     public ResponseEntity<RoleDto> removePermissionFromRole(
-            @PathVariable Long roleId,
-            @PathVariable Long permissionId) {
+            @PathVariable Integer roleId,
+            @PathVariable Integer permissionId) {
         Role updatedRole = userService.removePermissionFromRole(roleId, permissionId);
         return ResponseEntity.ok(UserMapper.toRoleDto(updatedRole));
     }

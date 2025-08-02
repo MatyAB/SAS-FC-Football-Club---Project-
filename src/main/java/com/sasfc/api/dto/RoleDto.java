@@ -5,7 +5,7 @@ import java.util.Set;
 
 @Data
 public class RoleDto {
-    private Long id;
+    private Integer id;
     private String name;
     private Set<PermissionDto> permissions;
 }

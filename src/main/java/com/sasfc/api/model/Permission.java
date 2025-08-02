@@ -14,7 +14,7 @@ public class Permission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(unique = true, nullable = false)
     private String name; // e.g., PLAYER_CREATE, NEWS_DELETE

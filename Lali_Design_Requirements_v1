@@ -1,0 +1,157 @@
+Of course. Here is a complete Product Requirements Document (PRD) covering all the features from your proposal. I have also included a simple guide at the end explaining how you can copy and save this document.
+
+Product Requirements Document (PRD): Lali Design Website
+
+Project: Lali Design - Cultural Clothing E-commerce & Rental Platform
+
+Version: 1.0
+
+Date: October 26, 2023
+
+1. Project Summary
+
+Lali Design is a comprehensive web platform for customers who love and wear cultural clothing. It serves as a marketplace for vendors (tailors/designers) to sell or rent their designs and a management tool for business administrators. The system supports online e-commerce, in-store sales via a Point of Sale (POS) system, and custom order management.
+
+2. User Roles & Permissions
+
+Customer: Browses the site, buys/rents products, and places custom orders.
+
+Vendor (Tailor/Designer): Manages their own product listings, tracks their orders, and handles custom requests assigned to them.
+
+Shopkeeper: Uses the website's POS interface to process in-store sales and rentals for walk-in customers.
+
+Admin: Has full oversight and control over the entire platform, including users, all orders, website content, and financial reporting.
+
+3. Functional Requirements
+FR-1: Homepage & General Site Features
+
+HP-1: Hero Banner: The homepage must display a large, high-quality banner image with a welcoming headline and a "call-to-action" button (e.g., “Explore Collection”).
+
+HP-2: Product Showcase: The homepage must feature a curated selection of products in a grid or card layout, showing the product image, name, and price.
+
+HP-3: Static Content Sections: The homepage must include sections for "Why Choose Us," "How to Order or Rent," a link to a "Custom Orders" form, a "Contact" section, and an "FAQ" section. All content in these sections must be editable by an Admin.
+
+FR-2: Customer Journey & E-commerce
+
+CUST-1: Product Browsing: Customers must be able to view all products and filter them by Category.
+
+CUST-2: Product Detail View: Clicking a product must lead to a page showing all details: multiple images, description, purchase price, rental price, and vendor information.
+
+CUST-3: Buy/Rent Selection: On the product page, customers must be able to choose between "Buy" or "Rent."
+
+CUST-4: Rental Date Selection: If "Rent" is selected, the customer must be able to choose a RentalStartDate and RentalEndDate from a calendar. Dates that are already booked for that product must be disabled.
+
+CUST-5: Shopping Cart: Customers must be able to add multiple items (for purchase or rent) to a shopping cart.
+
+CUST-6: Checkout: Customers must be able to complete their order by providing shipping/contact information and making a payment.
+
+CUST-7: Order Confirmation: After checkout, the customer must receive an order confirmation via email and on-screen.
+
+CUST-8: Custom Order Form: Customers must be able to access a form to submit custom order requests, including text fields for their ideas and measurements.
+
+FR-3: Vendor Functions
+
+VEND-1: Product Creation: Vendors must have a dashboard where they can add a new product by filling out a form (name, description, prices, images, category).
+
+VEND-2: Product Management: Vendors must be able to view, edit, or delete their own product listings.
+
+VEND-3: Order Tracking: Vendors must be able to see a list of all orders (buy and rent) for their products.
+
+VEND-4: Stock Management: When a product is rented, its status should automatically update to "Rented Out" for the selected dates.
+
+VEND-5: Earnings Report: Vendors must be able to see a simple report of their total sales and rental income.
+
+VEND-6: Custom Order Management: Vendors must be able to view and respond to custom order requests assigned to them.
+
+FR-4: Shopkeeper (Point of Sale - POS) Functions
+
+SHOP-1: In-store Transaction: Shopkeepers must have a simple interface to record a sale or rental for a walk-in customer.
+
+SHOP-2: Product Selection: The POS interface must allow the shopkeeper to search for and select an existing product from the inventory.
+
+SHOP-3: Record Payment: The interface must allow the shopkeeper to enter the total amount paid by the customer.
+
+SHOP-4: Track Inventory: An in-store sale or rental must update the product's status and be logged in the central Orders table, just like an online order.
+
+FR-5: Admin Functions
+
+ADM-1: User Management: Admins must be able to add, edit, or remove any user (Customer, Vendor, Shopkeeper).
+
+ADM-2: Full Order Management: Admins must be able to view and manage all orders from both online and in-store channels.
+
+ADM-3: Inventory Tracking: Admins must be able to see a complete overview of all product inventory and statuses.
+
+ADM-4: Expense Management: Admins must have a dedicated section to add and track business expenses (e.g., wages, materials).
+
+ADM-5: Reporting: Admins must be able to generate reports on income, expenses, and rentals by day, week, or month.
+
+ADM-6: Content Control: Admins must be able to change the homepage banner, featured products, and all other static content.
+
+4. Data Model & Field Specifications
+
+Here are the data tables required to build these features, with their fields and data types.
+
+Table Name	Field Name	Data Type	Description & Constraints
+Users	UserID	INTEGER	Primary Key, Auto-increment
+	Name	VARCHAR(255)	User's full name. Not null.
+	Email	VARCHAR(255)	User's email. Unique. Not null.
+	PasswordHash	VARCHAR(255)	Hashed password for security. Not null.
+	PhoneNumber	VARCHAR(50)	Optional phone number.
+	Role	ENUM	Allowed values: Customer, Vendor, Shopkeeper, Admin. Not null.
+	CreatedAt	TIMESTAMP	Auto-generated on creation.
+Categories	CategoryID	INTEGER	Primary Key, Auto-increment
+	CategoryName	VARCHAR(100)	Name of the category (e.g., "Wedding Attire"). Not null.
+	Description	TEXT	Optional description of the category.
+Products	ProductID	INTEGER	Primary Key, Auto-increment
+	CategoryID	INTEGER	Foreign Key to Categories.CategoryID. Not null.
+	VendorID	INTEGER	Foreign Key to Users.UserID (where Role is 'Vendor'). Not null.
+	Name	VARCHAR(255)	Product name. Not null.
+	Description	TEXT	Detailed product description.
+	ImageURL	VARCHAR(2048)	URL to the main product image.
+	PurchasePrice	DECIMAL(10, 2)	Price to buy. Can be null if only for rent.
+	RentalPrice	DECIMAL(10, 2)	Price to rent. Can be null if only for sale.
+	Status	ENUM	Allowed values: Available, Rented Out, Sold. Defaults to Available.
+Orders	OrderID	INTEGER	Primary Key, Auto-increment
+	CustomerID	INTEGER	Foreign Key to Users.UserID.
+	ProductID	INTEGER	Foreign Key to Products.ProductID.
+	OrderType	ENUM	Allowed values: Buy, Rent, Walk-in-Sale, Walk-in-Rent.
+	TotalAmount	DECIMAL(10, 2)	Final price paid. Not null.
+	OrderDate	TIMESTAMP	Auto-generated on creation.
+	RentalStartDate	DATE	Null if not a rental.
+	RentalEndDate	DATE	Null if not a rental.
+	Status	ENUM	Allowed values: Pending, Delivered, Completed, Returned.
+CustomOrders	CustomOrderID	INTEGER	Primary Key, Auto-increment
+	CustomerID	INTEGER	Foreign Key to Users.UserID.
+	AssignedVendorID	INTEGER	Foreign Key to Users.UserID. Can be null initially.
+	RequestDetails	TEXT	Customer's description of their desired item.
+	Status	ENUM	Allowed values: Submitted, In Progress, Quoted, Completed.
+	QuotedPrice	DECIMAL(10, 2)	The price quoted by the vendor. Null until quoted.
+Expenses	ExpenseID	INTEGER	Primary Key, Auto-increment
+	Description	VARCHAR(255)	What the expense was for (e.g., "Fabric purchase"). Not null.
+	Amount	DECIMAL(10, 2)	Cost of the expense. Not null.
+	Date	DATE	Date the expense was incurred.
+How to Use and Save This Document
+
+This document is your project's blueprint. It tells developers exactly what to build.
+
+1. How can I add to my cursor? (Copy the text)
+
+Click the "Copy" icon (usually looks like two overlapping squares) at the top-right corner of the code block above.
+
+Alternatively, you can manually highlight all the text from "Product Requirements Document..." down to here, then right-click and choose "Copy" or press Ctrl + C (on Windows) or Cmd + C (on Mac).
+
+2. How can I save? (Save it as a file)
+
+Open a Text Editor: Open a program like Microsoft Word, Google Docs, Notepad (on Windows), or TextEdit (on Mac).
+
+Paste the Text: Right-click in the empty document and choose "Paste" or press Ctrl + V (on Windows) or Cmd + V (on Mac).
+
+Save the File:
+
+Go to File -> Save As....
+
+Give it a clear file name, like Lali_Design_Requirements_v1.docx.
+
+Choose a location on your computer and click "Save".
+
+Now you have a permanent copy of your project plan that you can share with your team, developers, or use for your own reference.

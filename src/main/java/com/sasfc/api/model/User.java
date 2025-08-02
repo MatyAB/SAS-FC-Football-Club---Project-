@@ -6,7 +6,6 @@ import lombok.Setter;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -15,8 +14,8 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -27,15 +26,12 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastLogin;
+    @Column(length = 50)
+    private String phoneNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date createdAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -50,8 +46,4 @@ public class User {
         createdAt = new Date();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
-    }
 }

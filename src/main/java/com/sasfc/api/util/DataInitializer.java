@@ -2,9 +2,12 @@ package com.sasfc.api.util;
 
 import com.sasfc.api.model.Permission;
 import com.sasfc.api.model.Role;
+import com.sasfc.api.model.User;
 import com.sasfc.api.repository.PermissionRepository;
 import com.sasfc.api.repository.RoleRepository;
+import com.sasfc.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,34 +25,58 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PermissionRepository permissionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public void run(String... args) throws Exception {
         // --- Create Permissions ---
-        Permission playerRead = createPermissionIfNotFound("PLAYER_READ");
-        Permission playerWrite = createPermissionIfNotFound("PLAYER_WRITE");
-        Permission newsRead = createPermissionIfNotFound("NEWS_READ");
-        Permission newsWrite = createPermissionIfNotFound("NEWS_WRITE");
-        Permission matchRead = createPermissionIfNotFound("MATCH_READ");
-        Permission matchWrite = createPermissionIfNotFound("MATCH_WRITE");
-        Permission galleryRead = createPermissionIfNotFound("GALLERY_READ");
-        Permission galleryWrite = createPermissionIfNotFound("GALLERY_WRITE");
+        Permission productBrowse = createPermissionIfNotFound("PRODUCT_BROWSE");
+        Permission orderCreate = createPermissionIfNotFound("ORDER_CREATE");
+        Permission customOrderCreate = createPermissionIfNotFound("CUSTOM_ORDER_CREATE");
+        Permission productManageOwn = createPermissionIfNotFound("PRODUCT_MANAGE_OWN");
+        Permission orderViewOwn = createPermissionIfNotFound("ORDER_VIEW_OWN");
+        Permission customOrderManageAssigned = createPermissionIfNotFound("CUSTOM_ORDER_MANAGE_ASSIGNED");
+        Permission posUse = createPermissionIfNotFound("POS_USE");
         Permission userManage = createPermissionIfNotFound("USER_MANAGE");
-        
+        Permission orderManageAll = createPermissionIfNotFound("ORDER_MANAGE_ALL");
+        Permission inventoryManage = createPermissionIfNotFound("INVENTORY_MANAGE");
+        Permission expenseManage = createPermissionIfNotFound("EXPENSE_MANAGE");
+        Permission reportView = createPermissionIfNotFound("REPORT_VIEW");
+        Permission contentManage = createPermissionIfNotFound("CONTENT_MANAGE");
+
         // --- Create Roles and Assign Permissions ---
 
-        // EDITOR Role
-        Set<Permission> editorPermissions = new HashSet<>(Arrays.asList(
-            playerRead, newsRead, newsWrite, matchRead, galleryRead, galleryWrite
+        // CUSTOMER Role
+        Set<Permission> customerPermissions = new HashSet<>(Arrays.asList(
+                productBrowse, orderCreate, customOrderCreate
         ));
-        createRoleIfNotFound("ROLE_EDITOR", editorPermissions);
+        createRoleIfNotFound("ROLE_CUSTOMER", customerPermissions);
+
+        // VENDOR Role
+        Set<Permission> vendorPermissions = new HashSet<>(Arrays.asList(
+                productManageOwn, orderViewOwn, customOrderManageAssigned
+        ));
+        createRoleIfNotFound("ROLE_VENDOR", vendorPermissions);
+
+        // SHOPKEEPER Role
+        Set<Permission> shopkeeperPermissions = new HashSet<>(Arrays.asList(
+                posUse
+        ));
+        createRoleIfNotFound("ROLE_SHOPKEEPER", shopkeeperPermissions);
 
         // ADMIN Role
         Set<Permission> adminPermissions = new HashSet<>(Arrays.asList(
-            playerRead, playerWrite, newsRead, newsWrite, matchRead, matchWrite,
-            galleryRead, galleryWrite, userManage
+                userManage, orderManageAll, inventoryManage, expenseManage, reportView, contentManage
         ));
         createRoleIfNotFound("ROLE_ADMIN", adminPermissions);
+
+        // --- Create a default Admin User ---
+        createUserIfNotFound("admin", "admin@lalidesign.com", "password", "ROLE_ADMIN");
     }
 
     @Transactional
@@ -74,5 +101,21 @@ public class DataInitializer implements CommandLineRunner {
                     roleRepository.save(role);
                 }
             );
+    }
+
+    @Transactional
+    private void createUserIfNotFound(String name, String email, String password, String roleName) {
+        if (userRepository.findByEmail(email).isEmpty()) {
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPasswordHash(passwordEncoder.encode(password));
+            
+            roleRepository.findByName(roleName).ifPresent(role -> {
+                user.setRoles(new HashSet<>(Arrays.asList(role)));
+            });
+            
+            userRepository.save(user);
+        }
     }
 }

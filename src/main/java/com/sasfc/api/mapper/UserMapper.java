@@ -21,7 +21,6 @@ public class UserMapper {
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setCreatedAt(user.getCreatedAt());
-        userDto.setLastLogin(user.getLastLogin());
         if (user.getRoles() != null) {
             userDto.setRoles(user.getRoles().stream()
                     .map(UserMapper::toRoleDto)

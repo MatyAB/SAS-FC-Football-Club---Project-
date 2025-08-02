@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -53,7 +52,7 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    public User findUserById(UUID id) {
+    public User findUserById(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
@@ -78,7 +77,7 @@ public class UserService {
     }
 
     @Transactional
-    public Role assignPermissionToRole(Long roleId, Long permissionId) {
+    public Role assignPermissionToRole(Integer roleId, Integer permissionId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + roleId));
         Permission permission = permissionRepository.findById(permissionId)
@@ -89,7 +88,7 @@ public class UserService {
     }
 
     @Transactional
-    public Role removePermissionFromRole(Long roleId, Long permissionId) {
+    public Role removePermissionFromRole(Integer roleId, Integer permissionId) {
         Role role = roleRepository.findById(roleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found with id: " + roleId));
         Permission permission = permissionRepository.findById(permissionId)
