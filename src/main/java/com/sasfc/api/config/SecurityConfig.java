@@ -18,10 +18,6 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-
-
-
-        
     }
 
     @Bean
@@ -36,7 +32,12 @@ public class SecurityConfig {
             // 3. Define the authorization rules for different endpoints
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/login").permitAll() // Allow login endpoint
-                .requestMatchers("/api/admin/**").permitAll()   // (if you want admin open for now)
+                .requestMatchers("/api/admin/**").permitAll()
+                .requestMatchers("/api/v1/categories/**").permitAll()
+                .requestMatchers("/api/products/**").permitAll()
+                .requestMatchers("/api/expenses/**").permitAll()
+                .requestMatchers("/api/custom-orders/**").permitAll()
+                .requestMatchers("/api/orders/**").permitAll()
                 .anyRequest().authenticated()
             );
 
