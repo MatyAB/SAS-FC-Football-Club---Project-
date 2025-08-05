@@ -2,6 +2,7 @@ package com.sasfc.api.controller;
 
 import com.sasfc.api.dto.TeamDto;
 import com.sasfc.api.model.Team;
+import com.sasfc.api.model.enums.TeamCategory;
 import com.sasfc.api.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,4 +48,11 @@ public class TeamController {
         teamService.deleteTeam(id);
         return ResponseEntity.noContent().build();
     }
+
+    
+    @GetMapping("/categories")
+    public ResponseEntity<List<TeamCategory>> getTeamCategories() {
+        return ResponseEntity.ok(List.of(TeamCategory.values()));
+    }
+
 }

@@ -45,6 +45,12 @@ public class GalleryImageService {
         return convertToDto(savedImage);
     }
 
+    public List<GalleryImageDto> uploadImages(List<MultipartFile> files, String caption, String category, Long uploaderId) {
+        return files.stream()
+                .map(file -> uploadImage(file, caption, category, uploaderId))
+                .collect(Collectors.toList());
+    }
+
     public List<GalleryImageDto> getAllImages() {
         return galleryImageRepository.findAll().stream()
                 .map(this::convertToDto)

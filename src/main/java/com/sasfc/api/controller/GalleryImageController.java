@@ -18,14 +18,14 @@ public class GalleryImageController {
     @Autowired
     private GalleryImageService galleryImageService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<GalleryImageDto> uploadImage(
-            @RequestParam("file") MultipartFile file,
+    @PostMapping("/upload-multiple")
+    public ResponseEntity<List<GalleryImageDto>> uploadImages(
+            @RequestParam("files") List<MultipartFile> files,
             @RequestParam("caption") String caption,
             @RequestParam("category") String category,
             @RequestParam("uploaderId") Long uploaderId) {
-        GalleryImageDto uploadedImage = galleryImageService.uploadImage(file, caption, category, uploaderId);
-        return new ResponseEntity<>(uploadedImage, HttpStatus.CREATED);
+        List<GalleryImageDto> uploadedImages = galleryImageService.uploadImages(files, caption, category, uploaderId);
+        return new ResponseEntity<>(uploadedImages, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -34,13 +34,13 @@ public class GalleryImageController {
         return ResponseEntity.ok(images);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/images/{id}")
     public ResponseEntity<GalleryImageDto> getImageById(@PathVariable UUID id) {
         GalleryImageDto image = galleryImageService.getImageById(id);
         return ResponseEntity.ok(image);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/images/{id}")
     public ResponseEntity<GalleryImageDto> updateImage(
             @PathVariable UUID id,
             @RequestParam("caption") String caption,
@@ -49,7 +49,7 @@ public class GalleryImageController {
         return ResponseEntity.ok(updatedImage);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/images/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
         galleryImageService.deleteImage(id);
         return ResponseEntity.noContent().build();
