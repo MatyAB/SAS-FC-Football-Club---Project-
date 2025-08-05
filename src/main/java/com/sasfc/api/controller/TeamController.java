@@ -55,4 +55,14 @@ public class TeamController {
         return ResponseEntity.ok(List.of(TeamCategory.values()));
     }
 
+    @GetMapping("/categories/{categoryName}")
+    public ResponseEntity<TeamCategory> getTeamCategoryByName(@PathVariable String categoryName) {
+        try {
+            TeamCategory category = TeamCategory.valueOf(categoryName.toUpperCase());
+            return ResponseEntity.ok(category);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null); // Or throw a specific exception
+        }
+    }
+
 }
