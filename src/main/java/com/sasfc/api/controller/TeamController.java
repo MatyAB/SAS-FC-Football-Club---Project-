@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -19,8 +21,8 @@ public class TeamController {
     @Autowired
     private TeamService teamService;
 
-    @PostMapping
-    public ResponseEntity<Team> createTeam(@RequestBody TeamDto teamDto) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Team> createTeam(@ModelAttribute TeamDto teamDto, @RequestParam(value = "teamLogo", required = false) MultipartFile teamLogo) {
         Team createdTeam = teamService.createTeam(teamDto);
         return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
     }

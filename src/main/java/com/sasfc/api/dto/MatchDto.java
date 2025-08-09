@@ -1,6 +1,8 @@
 package com.sasfc.api.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import com.sasfc.api.dto.TeamDto;
 
 public class MatchDto {
@@ -14,6 +16,7 @@ public class MatchDto {
     private Integer awayScore;
     private String status;
     private String matchReport;
+    private List<UUID> scorerIds;
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -35,4 +38,4 @@ public class MatchDto {
     public void setStatus(String status) { this.status = status; }
     public String getMatchReport() { return matchReport; }
     public void setMatchReport(String matchReport) { this.matchReport = matchReport; }
-} 
+}

@@ -1,5 +1,3 @@
-// package com.sasfc.api.model;
-
 package com.sasfc.api.model;
 
 import com.sasfc.api.model.enums.PlayerPosition;

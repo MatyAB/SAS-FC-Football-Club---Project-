@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/api/matches")
@@ -18,11 +20,13 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
-    @PostMapping
-    public ResponseEntity<Match> createMatch(@RequestBody CreateMatchRequest request) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Match> createMatch(@ModelAttribute CreateMatchRequest request) {
         Match createdMatch = matchService.createMatch(request);
         return new ResponseEntity<>(createdMatch, HttpStatus.CREATED);
     }
+
+    
 
     @GetMapping
     public ResponseEntity<List<Match>> getAllMatches() {

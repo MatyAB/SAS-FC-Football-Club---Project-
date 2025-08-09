@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -37,12 +38,21 @@ public class Match {
     private Integer awayScore;
 
     @Enumerated(EnumType.STRING)
+    
     @Column(nullable = false)
     private MatchStatus status;
 
     @Lob
     @Column(columnDefinition = "TEXT")
     private String matchReport;
+
+    @ManyToMany
+    @JoinTable(
+        name = "match_scorers",
+        joinColumns = @JoinColumn(name = "match_id"),
+        inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<Player> scorers;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
