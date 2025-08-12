@@ -3,7 +3,6 @@ package com.sasfc.api.dto;
 import com.sasfc.api.model.enums.PlayerPosition;
 import com.sasfc.api.model.enums.TeamCategory;
 import lombok.Data;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -23,4 +22,29 @@ public class PlayerDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joinedDate;
     private boolean isActive;
+
+    // ======================================================
+    // =========== NEW FIELDS FROM MODEL UPDATE =============
+    // ======================================================
+
+    private Double height;
+    private Double weight;
+    
+    // Using String for the enum in the DTO is good practice for APIs
+    private String preferredFoot; 
+
+    // Overall career stats
+    private Integer matchesPlayed;
+    private Integer goalsScored;
+    private Integer assists;
+    private Integer cleanSheets;
+
+    // Optional detailed stats
+    private Double passAccuracy;
+    private Double tackleSuccessRate;
+
+    private String careerHighlights;
+
+    private String imageUrl2;
+    private String imageUrl3;
 }

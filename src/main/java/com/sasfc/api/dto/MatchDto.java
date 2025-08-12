@@ -1,11 +1,53 @@
+// package com.sasfc.api.dto;
+
+// import java.util.Date;
+// import java.util.List;
+// import java.util.UUID;
+// import com.sasfc.api.dto.TeamDto;
+
+// public class MatchDto {
+//     private Long id;
+//     private TeamDto homeTeam;
+//     private TeamDto awayTeam;
+//     private Date matchDateTime;
+//     private String venue;
+//     private String competition;
+//     private Integer homeScore;
+//     private Integer awayScore;
+//     private String status;
+//     private String matchReport;
+//     private List<UUID> scorerIds;
+//     // Getters and setters
+//     public Long getId() { return id; }
+//     public void setId(Long id) { this.id = id; }
+//     public TeamDto getHomeTeam() { return homeTeam; }
+//     public void setHomeTeam(TeamDto homeTeam) { this.homeTeam = homeTeam; }
+//     public TeamDto getAwayTeam() { return awayTeam; }
+//     public void setAwayTeam(TeamDto awayTeam) { this.awayTeam = awayTeam; }
+//     public Date getMatchDateTime() { return matchDateTime; }
+//     public void setMatchDateTime(Date matchDateTime) { this.matchDateTime = matchDateTime; }
+//     public String getVenue() { return venue; }
+//     public void setVenue(String venue) { this.venue = venue; }
+//     public String getCompetition() { return competition; }
+//     public void setCompetition(String competition) { this.competition = competition; }
+//     public Integer getHomeScore() { return homeScore; }
+//     public void setHomeScore(Integer homeScore) { this.homeScore = homeScore; }
+//     public Integer getAwayScore() { return awayScore; }
+//     public void setAwayScore(Integer awayScore) { this.awayScore = awayScore; }
+//     public String getStatus() { return status; }
+//     public void setStatus(String status) { this.status = status; }
+//     public String getMatchReport() { return matchReport; }
+//     public void setMatchReport(String matchReport) { this.matchReport = matchReport; }
+// }
 package com.sasfc.api.dto;
 
+import lombok.Data;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-import com.sasfc.api.dto.TeamDto;
 
+@Data
 public class MatchDto {
+
     private Long id;
     private TeamDto homeTeam;
     private TeamDto awayTeam;
@@ -16,26 +58,14 @@ public class MatchDto {
     private Integer awayScore;
     private String status;
     private String matchReport;
-    private List<UUID> scorerIds;
-    // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public TeamDto getHomeTeam() { return homeTeam; }
-    public void setHomeTeam(TeamDto homeTeam) { this.homeTeam = homeTeam; }
-    public TeamDto getAwayTeam() { return awayTeam; }
-    public void setAwayTeam(TeamDto awayTeam) { this.awayTeam = awayTeam; }
-    public Date getMatchDateTime() { return matchDateTime; }
-    public void setMatchDateTime(Date matchDateTime) { this.matchDateTime = matchDateTime; }
-    public String getVenue() { return venue; }
-    public void setVenue(String venue) { this.venue = venue; }
-    public String getCompetition() { return competition; }
-    public void setCompetition(String competition) { this.competition = competition; }
-    public Integer getHomeScore() { return homeScore; }
-    public void setHomeScore(Integer homeScore) { this.homeScore = homeScore; }
-    public Integer getAwayScore() { return awayScore; }
-    public void setAwayScore(Integer awayScore) { this.awayScore = awayScore; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public String getMatchReport() { return matchReport; }
-    public void setMatchReport(String matchReport) { this.matchReport = matchReport; }
+
+    // ======================================================
+    // =========== NEW FIELDS FROM MODEL UPDATE =============
+    // ======================================================
+
+    // We send back the full details of the Man of the Match
+    private PlayerDto manOfTheMatch;
+
+    // We send back a detailed list of goals for this match
+    private List<GoalDto> goals;
 }
