@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/teams")
@@ -23,6 +28,18 @@ public class TeamController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Team> createTeam(@ModelAttribute TeamDto teamDto, @RequestParam(value = "teamLogo", required = false) MultipartFile teamLogo) {
+        // Handle optional logo upload and set logoUrl on DTO
+        if (teamLogo != null && !teamLogo.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + teamLogo.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads", fileName);
+            try {
+                Files.createDirectories(uploadPath.getParent());
+                Files.copy(teamLogo.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                teamDto.setLogoUrl("http://localhost:8080/uploads/" + fileName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
         Team createdTeam = teamService.createTeam(teamDto);
         return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
     }
@@ -39,8 +56,21 @@ public class TeamController {
         return ResponseEntity.ok(team);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Team> updateTeam(@PathVariable UUID id, @RequestBody TeamDto teamDto) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Team> updateTeam(@PathVariable UUID id,
+                                           @ModelAttribute TeamDto teamDto,
+                                           @RequestParam(value = "teamLogo", required = false) MultipartFile teamLogo) {
+        if (teamLogo != null && !teamLogo.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + teamLogo.getOriginalFilename();
+            Path uploadPath = Paths.get("uploads", fileName);
+            try {
+                Files.createDirectories(uploadPath.getParent());
+                Files.copy(teamLogo.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                teamDto.setLogoUrl("http://localhost:8080/uploads/" + fileName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
         Team updatedTeam = teamService.updateTeam(id, teamDto);
         return ResponseEntity.ok(updatedTeam);
     }

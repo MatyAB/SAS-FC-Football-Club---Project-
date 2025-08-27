@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity // This enables Spring's web security support
@@ -28,6 +29,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // Enable CORS with defaults so WebMvcConfigurer mappings apply
+            .cors(Customizer.withDefaults())
             // 1. Disable CSRF, as we are using a stateless REST API (no sessions)
             // .csrf(csrf -> csrf.disable())
             // 1. Disable CSRF protection
@@ -44,8 +47,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/news/**").permitAll()
                 .requestMatchers("/api/teams/**").permitAll()
                 .requestMatchers("/api/players/**").permitAll()
-                .requestMatchers("/api/gallery/**").permitAll()
+                .requestMatchers("/api/gallery/**").permitAll() 
                 .requestMatchers("/api/sponsors/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll() // Allow access to uploads
                 .anyRequest().authenticated()
             );
 
@@ -58,7 +62,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                    .allowedOrigins("http://localhost:3000") // your frontend URL
+                    .allowedOrigins("http://localhost:3000", "http://localhost:5173")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(true);

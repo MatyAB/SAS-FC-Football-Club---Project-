@@ -23,7 +23,7 @@ public class GalleryImageController {
             @RequestParam("files") List<MultipartFile> files,
             @RequestParam("caption") String caption,
             @RequestParam("category") String category,
-            @RequestParam("uploaderId") Long uploaderId) {
+            @RequestParam(value = "uploaderId", required = false) Long uploaderId) {
         List<GalleryImageDto> uploadedImages = galleryImageService.uploadImages(files, caption, category, uploaderId);
         return new ResponseEntity<>(uploadedImages, HttpStatus.CREATED);
     }
@@ -46,6 +46,14 @@ public class GalleryImageController {
             @RequestParam("caption") String caption,
             @RequestParam("category") String category) {
         GalleryImageDto updatedImage = galleryImageService.updateImage(id, caption, category);
+        return ResponseEntity.ok(updatedImage);
+    }
+
+    @PutMapping("/images/{id}/replace-file")
+    public ResponseEntity<GalleryImageDto> replaceImageFile(
+            @PathVariable UUID id,
+            @RequestParam("file") MultipartFile file) {
+        GalleryImageDto updatedImage = galleryImageService.replaceImageFile(id, file);
         return ResponseEntity.ok(updatedImage);
     }
 

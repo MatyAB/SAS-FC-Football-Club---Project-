@@ -51,10 +51,17 @@ public class TeamService {
 
         existingTeam.setName(teamDto.getName());
         existingTeam.setShortName(teamDto.getShortName());
-        existingTeam.setLogoUrl(teamDto.getLogoUrl());
+        // Only update logoUrl if provided; otherwise, keep existing
+        if (teamDto.getLogoUrl() != null && !teamDto.getLogoUrl().isEmpty()) {
+            existingTeam.setLogoUrl(teamDto.getLogoUrl());
+        }
         existingTeam.setFoundedYear(teamDto.getFoundedYear());
         existingTeam.setHomeStadium(teamDto.getHomeStadium());
-        existingTeam.setCategory(teamDto.getCategory());
+        TeamCategory category = teamDto.getCategory();
+        if (category == null) {
+            throw new IllegalArgumentException("Team category cannot be null. Please provide a valid category.");
+        }
+        existingTeam.setCategory(category);
         return teamRepository.save(existingTeam);
     }
 

@@ -23,13 +23,9 @@ public class Goal {
     private Player scorer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assist_player_id") // An assist is optional, so nullable is true by default
+    @JoinColumn(name = "assist_player_id")
     private Player assistedBy;
 
     @Column(nullable = false)
-    private Integer minuteScored; // e.g., 43 for the 43rd minute
-
-    // You could add more details here if needed, like:
-    // private boolean isPenalty;
-    // private boolean isOwnGoal;
+    private Integer minuteScored;
 }

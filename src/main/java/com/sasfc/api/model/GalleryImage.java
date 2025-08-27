@@ -28,7 +28,7 @@ public class GalleryImage {
     private GalleryCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploader_id", nullable = false)
+    @JoinColumn(name = "uploader_id", nullable = true)
     private User uploader;
 
     @Temporal(TemporalType.TIMESTAMP)

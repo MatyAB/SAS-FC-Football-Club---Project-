@@ -89,6 +89,40 @@ public class SponsorController {
                              .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Sponsor> updateSponsorWithLogo(
+            @PathVariable Long id,
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam String slogan,
+            @RequestParam String website,
+            @RequestParam SponsorCategory category,
+            @RequestPart(required = false) MultipartFile logo) {
+    
+        CreateSponsorRequest request = new CreateSponsorRequest();
+        request.setName(name);
+        request.setDescription(description);
+        request.setSlogan(slogan);
+        request.setWebsite(website);
+        request.setCategory(category);
+    
+        if (logo != null && !logo.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + logo.getOriginalFilename();
+            Path filePath = Paths.get("uploads", fileName);
+            try {
+                Files.createDirectories(filePath.getParent());
+                Files.copy(logo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                request.setLogo("http://localhost:8080/uploads/" + fileName);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }
+    
+        Optional<Sponsor> updatedSponsor = sponsorService.updateSponsor(id, request);
+        return updatedSponsor.map(ResponseEntity::ok)
+                             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSponsor(@PathVariable Long id) {
         sponsorService.deleteSponsor(id);

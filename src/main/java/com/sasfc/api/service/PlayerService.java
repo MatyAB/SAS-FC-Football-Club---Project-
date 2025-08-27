@@ -1,12 +1,13 @@
-// 
-
 package com.sasfc.api.service;
 
 import com.sasfc.api.dto.PlayerDto;
+import com.sasfc.api.dto.TeamDto;
 import com.sasfc.api.exception.ResourceNotFoundException;
 import com.sasfc.api.model.Player;
+import com.sasfc.api.model.Team;
 import com.sasfc.api.model.enums.PreferredFoot;
 import com.sasfc.api.repository.PlayerRepository;
+import com.sasfc.api.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,9 +16,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.slf4j.Logger; // Import Logger
+import org.slf4j.LoggerFactory; // Import LoggerFactory
 
 @Service
 public class PlayerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlayerService.class); // Initialize Logger
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -25,14 +30,24 @@ public class PlayerService {
     @Autowired
     private FileStorageService fileStorageService; // Assuming you have this service for file uploads
 
+    @Autowired
+    private TeamRepository teamRepository;
+
     // Helper method to save an image and get its URL
     private String storeAndGetFileUri(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
             String fileName = fileStorageService.storeFile(file);
-            return ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/uploads/")
-                    .path(fileName)
-                    .toUriString();
+            if (fileName != null && !fileName.isEmpty()) {
+                String fileUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/uploads/")
+                        .path(fileName)
+                        .toUriString();
+                logger.info("Generated file URI: {}", fileUri); // Log the generated URI
+                return fileUri;
+            } else {
+                logger.error("File storage failed or returned empty filename for file: {}", file.getOriginalFilename());
+                return null; // Indicate failure
+            }
         }
         return null;
     }
@@ -99,7 +114,6 @@ public class PlayerService {
         dto.setNationality(player.getNationality());
         dto.setBio(player.getBio());
         dto.setImageUrl(player.getImageUrl());
-        dto.setTeamCategory(player.getTeamCategory());
         dto.setJoinedDate(player.getJoinedDate());
         dto.setActive(player.isActive());
 
@@ -119,6 +133,15 @@ public class PlayerService {
         dto.setImageUrl2(player.getImageUrl2());
         dto.setImageUrl3(player.getImageUrl3());
 
+        // Team mapping
+        if (player.getTeam() != null) {
+            TeamDto teamDto = new TeamDto();
+            teamDto.setId(player.getTeam().getId());
+            teamDto.setName(player.getTeam().getName());
+            teamDto.setLogoUrl(player.getTeam().getLogoUrl());
+            dto.setTeam(teamDto);
+        }
+
         return dto;
     }
 
@@ -130,7 +153,6 @@ public class PlayerService {
         player.setAge(dto.getAge());
         player.setNationality(dto.getNationality());
         player.setBio(dto.getBio());
-        player.setTeamCategory(dto.getTeamCategory());
         player.setJoinedDate(dto.getJoinedDate());
         player.setActive(dto.isActive());
 
@@ -147,5 +169,14 @@ public class PlayerService {
         player.setPassAccuracy(dto.getPassAccuracy());
         player.setTackleSuccessRate(dto.getTackleSuccessRate());
         player.setCareerHighlights(dto.getCareerHighlights());
+
+        // Team relation
+        if (dto.getTeamId() != null) {
+            Team team = teamRepository.findById(dto.getTeamId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Team not found with id: " + dto.getTeamId()));
+            player.setTeam(team);
+        } else {
+            player.setTeam(null);
+        }
     }
 }

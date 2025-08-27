@@ -11,6 +11,8 @@ public class GalleryImageDto {
     private String category;
     private String uploaderName;
     private Date createdAt;
+    private int imageCount; // Added for frontend compatibility
+
     // Getters and setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
@@ -26,4 +28,7 @@ public class GalleryImageDto {
     public void setUploaderName(String uploaderName) { this.uploaderName = uploaderName; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-} 
+
+    public int getImageCount() { return imageCount; }
+    public void setImageCount(int imageCount) { this.imageCount = imageCount; }
+}

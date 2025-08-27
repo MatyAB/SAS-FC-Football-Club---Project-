@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,12 +22,12 @@ public class PlayerController {
     private PlayerService playerService;
 
     // The request to this endpoint will be of type "multipart/form-data"
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PlayerDto> createPlayer(
-            @ModelAttribute PlayerDto playerDto,
-            @RequestParam(value = "image", required = false) MultipartFile image,
-            @RequestParam(value = "image2", required = false) MultipartFile image2,
-            @RequestParam(value = "image3", required = false) MultipartFile image3) {
+            @RequestPart("player") PlayerDto playerDto,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "image2", required = false) MultipartFile image2,
+            @RequestPart(value = "image3", required = false) MultipartFile image3) {
         
         Player createdPlayer = playerService.createPlayer(playerDto, image, image2, image3);
         // It's best practice to return the DTO representation
@@ -58,13 +59,13 @@ public class PlayerController {
         return ResponseEntity.ok(player);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PlayerDto> updatePlayer(
             @PathVariable UUID id, 
-            @ModelAttribute PlayerDto playerDto, 
-            @RequestParam(value = "image", required = false) MultipartFile image,
-            @RequestParam(value = "image2", required = false) MultipartFile image2,
-            @RequestParam(value = "image3", required = false) MultipartFile image3) {
+            @RequestPart("player") PlayerDto playerDto, 
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "image2", required = false) MultipartFile image2,
+            @RequestPart(value = "image3", required = false) MultipartFile image3) {
         
         Player updatedPlayer = playerService.updatePlayer(id, playerDto, image, image2, image3);
         return ResponseEntity.ok(toPlayerDto(updatedPlayer));
@@ -88,7 +89,6 @@ public class PlayerController {
         dto.setNationality(player.getNationality());
         dto.setBio(player.getBio());
         dto.setImageUrl(player.getImageUrl());
-        dto.setTeamCategory(player.getTeamCategory());
         dto.setJoinedDate(player.getJoinedDate());
         dto.setActive(player.isActive());
         dto.setHeight(player.getHeight());
@@ -105,6 +105,13 @@ public class PlayerController {
         dto.setCareerHighlights(player.getCareerHighlights());
         dto.setImageUrl2(player.getImageUrl2());
         dto.setImageUrl3(player.getImageUrl3());
+        if (player.getTeam() != null) {
+            com.sasfc.api.dto.TeamDto t = new com.sasfc.api.dto.TeamDto();
+            t.setId(player.getTeam().getId());
+            t.setName(player.getTeam().getName());
+            t.setLogoUrl(player.getTeam().getLogoUrl());
+            dto.setTeam(t);
+        }
         return dto;
     }
 }

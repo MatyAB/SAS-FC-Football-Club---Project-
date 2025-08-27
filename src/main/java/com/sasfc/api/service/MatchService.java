@@ -183,46 +183,83 @@ public class MatchService {
         match.setVenue(request.getVenue());
         match.setCompetition(request.getCompetition());
         match.setStatus(request.getStatus());
-        match.setHomeScore(request.getHomeScore());
-        match.setAwayScore(request.getAwayScore());
-        match.setMatchReport(request.getMatchReport());
 
-        // Handle Man of the Match
-        if (request.getManOfTheMatchPlayerId() != null) {
-            Player motmPlayer = playerRepository.findById(request.getManOfTheMatchPlayerId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Man of the Match player not found with id: " + request.getManOfTheMatchPlayerId()));
-            match.setManOfTheMatch(motmPlayer);
-        } else {
-            match.setManOfTheMatch(null);
-        }
+        // Apply business rules based on match status
+        switch (request.getStatus()) {
+            case COMPLETED -> {
+                // Scores and report are relevant for completed matches
+                match.setHomeScore(request.getHomeScore());
+                match.setAwayScore(request.getAwayScore());
+                match.setMatchReport(request.getMatchReport());
 
-        // Handle the new Goal entities
-        if (request.getGoals() != null && !request.getGoals().isEmpty()) {
-            List<Goal> goalEntities = request.getGoals().stream()
-                .map(goalDto -> {
-                    Goal goal = new Goal();
-                    
-                    Player scorer = playerRepository.findById(goalDto.getScorerPlayerId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Scorer player not found with id: " + goalDto.getScorerPlayerId()));
-                    goal.setScorer(scorer);
-                    
-                    if (goalDto.getAssistPlayerId() != null) {
-                        Player assistant = playerRepository.findById(goalDto.getAssistPlayerId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Assisting player not found with id: " + goalDto.getAssistPlayerId()));
-                        goal.setAssistedBy(assistant);
+                // Man of the Match (optional for completed matches)
+                if (request.getManOfTheMatchPlayerId() != null) {
+                    Player motmPlayer = playerRepository.findById(request.getManOfTheMatchPlayerId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Man of the Match player not found with id: " + request.getManOfTheMatchPlayerId()));
+                    // Validate MOTM belongs to either team if team relation exists
+                    if (motmPlayer.getTeam() != null && motmPlayer.getTeam().getId() != null
+                            && !motmPlayer.getTeam().getId().equals(homeTeam.getId())
+                            && !motmPlayer.getTeam().getId().equals(awayTeam.getId())) {
+                        throw new ResourceNotFoundException("Man of the Match must belong to the home or away team");
                     }
-                    
-                    goal.setMinuteScored(goalDto.getMinuteScored());
-                    // IMPORTANT: Set the relationship back to the match
-                    goal.setMatch(match); 
-                    return goal;
-                }).collect(Collectors.toList());
-            
-            // If the goal list on the match is null, initialize it
-            if (match.getGoals() == null) {
-                match.setGoals(new ArrayList<>());
+                    match.setManOfTheMatch(motmPlayer);
+                } else {
+                    match.setManOfTheMatch(null);
+                }
+
+                // Goals (optional for completed matches)
+                if (request.getGoals() != null && !request.getGoals().isEmpty()) {
+                    List<Goal> goalEntities = request.getGoals().stream()
+                        .map(goalDto -> {
+                            Goal goal = new Goal();
+
+                            Player scorer = playerRepository.findById(goalDto.getScorerPlayerId())
+                                .orElseThrow(() -> new ResourceNotFoundException("Scorer player not found with id: " + goalDto.getScorerPlayerId()));
+                            if (scorer.getTeam() != null && scorer.getTeam().getId() != null
+                                    && !scorer.getTeam().getId().equals(homeTeam.getId())
+                                    && !scorer.getTeam().getId().equals(awayTeam.getId())) {
+                                throw new ResourceNotFoundException("Scorer must belong to the home or away team");
+                            }
+                            goal.setScorer(scorer);
+
+                            if (goalDto.getAssistPlayerId() != null) {
+                                Player assistant = playerRepository.findById(goalDto.getAssistPlayerId())
+                                    .orElseThrow(() -> new ResourceNotFoundException("Assisting player not found with id: " + goalDto.getAssistPlayerId()));
+                                if (assistant.getTeam() != null && assistant.getTeam().getId() != null
+                                        && !assistant.getTeam().getId().equals(homeTeam.getId())
+                                        && !assistant.getTeam().getId().equals(awayTeam.getId())) {
+                                    throw new ResourceNotFoundException("Assistant must belong to the home or away team");
+                                }
+                                goal.setAssistedBy(assistant);
+                            }
+
+                            goal.setMinuteScored(goalDto.getMinuteScored());
+                            // Set the relationship back to the match
+                            goal.setMatch(match);
+                            return goal;
+                        }).collect(Collectors.toList());
+
+                    if (match.getGoals() == null) {
+                        match.setGoals(new ArrayList<>());
+                    }
+                    match.getGoals().addAll(goalEntities);
+                } else {
+                    // No goals provided: ensure list is empty for clarity
+                    if (match.getGoals() != null) {
+                        match.getGoals().clear();
+                    }
+                }
             }
-            match.getGoals().addAll(goalEntities);
+            default -> {
+                // For SCHEDULED/POSTPONED/CANCELLED: clear scores, report, goals, and MOTM
+                match.setHomeScore(null);
+                match.setAwayScore(null);
+                match.setMatchReport(null);
+                match.setManOfTheMatch(null);
+                if (match.getGoals() != null) {
+                    match.getGoals().clear();
+                }
+            }
         }
     }
 }

@@ -37,9 +37,19 @@ public class GalleryImageService {
         galleryImage.setCaption(caption);
         galleryImage.setCategory(GalleryCategory.valueOf(category.toUpperCase()));
 
-        User uploader = userRepository.findById(uploaderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Uploader not found with id " + uploaderId));
-        galleryImage.setUploader(uploader);
+        if (uploaderId != null) {
+            User uploader = userRepository.findById(uploaderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Uploader not found with id " + uploaderId));
+            galleryImage.setUploader(uploader);
+        } else {
+            // Fallback to any existing user to satisfy NOT NULL DB constraints if present
+            List<User> users = userRepository.findAll();
+            if (!users.isEmpty()) {
+                galleryImage.setUploader(users.get(0));
+            } else {
+                throw new ResourceNotFoundException("No users available to assign as uploader. Please create a user first or provide uploaderId.");
+            }
+        }
 
         GalleryImage savedImage = galleryImageRepository.save(galleryImage);
         return convertToDto(savedImage);
@@ -74,6 +84,22 @@ public class GalleryImageService {
         return convertToDto(updatedImage);
     }
 
+    public GalleryImageDto replaceImageFile(UUID id, MultipartFile file) {
+        GalleryImage galleryImage = galleryImageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("GalleryImage not found with id " + id));
+
+        // Store the new file
+        String fileName = fileStorageService.storeFile(file);
+        String fileUrl = "/uploads/" + fileName;
+
+        // Update the URLs
+        galleryImage.setUrl(fileUrl);
+        galleryImage.setThumbnailUrl(fileUrl); // For simplicity, using same URL for thumbnail
+
+        GalleryImage updatedImage = galleryImageRepository.save(galleryImage);
+        return convertToDto(updatedImage);
+    }
+
     public void deleteImage(UUID id) {
         GalleryImage galleryImage = galleryImageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("GalleryImage not found with id " + id));
@@ -91,6 +117,7 @@ public class GalleryImageService {
         dto.setCategory(galleryImage.getCategory().name());
         dto.setUploaderName(galleryImage.getUploader() != null ? galleryImage.getUploader().getName() : "N/A");
         dto.setCreatedAt(galleryImage.getCreatedAt());
+        dto.setImageCount(1); // Set a default count for individual images
         return dto;
     }
 }

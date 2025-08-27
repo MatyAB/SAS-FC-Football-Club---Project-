@@ -65,7 +65,6 @@ package com.sasfc.api.model;
 
 import com.sasfc.api.model.enums.PlayerPosition;
 import com.sasfc.api.model.enums.PreferredFoot; // <-- Import new enum
-import com.sasfc.api.model.enums.TeamCategory;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
@@ -99,9 +98,6 @@ public class Player {
 
     private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TeamCategory teamCategory;
 
     private Date joinedDate;
     private boolean isActive = true;
@@ -135,6 +131,10 @@ public class Player {
 
     // ======================================================
     // ======================================================
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
