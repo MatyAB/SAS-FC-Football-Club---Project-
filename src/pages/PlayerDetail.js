@@ -14,6 +14,7 @@ export const PlayerDetail = () => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchPlayer = async () => {
@@ -28,6 +29,7 @@ export const PlayerDetail = () => {
           ...data,
           position: data.position?.toUpperCase() || 'PLAYER'
         });
+        setActiveImageIndex(0);
       } catch (err) {
         console.error('Error fetching player:', err);
         setError(err.message);
@@ -80,12 +82,38 @@ export const PlayerDetail = () => {
             <div className="bg-gray-800/30 rounded-xl border border-gray-700/50 overflow-hidden shadow-2xl">
               {/* Large Player Image */}
               <div className="relative h-96 bg-gradient-to-br from-[#339c0c]/10 to-[#f9fd06]/10">
-                <img 
-                  src={player.imageUrl || '/images/player-default.jpg'} 
-                  alt={player.name} 
-                  className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain"
-                />
+                {(() => {
+                  const images = [player.imageUrl, player.imageUrl2, player.imageUrl3].filter(Boolean);
+                  const mainSrc = images[activeImageIndex] || images[0] || '/images/player-default.jpg';
+                  return (
+                    <img 
+                      src={mainSrc}
+                      alt={player.name}
+                      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 h-full w-auto object-contain"
+                    />
+                  );
+                })()}
               </div>
+
+              {/* Thumbnails */}
+              {([player?.imageUrl, player?.imageUrl2, player?.imageUrl3].filter(Boolean).length > 1) && (
+                <div className="p-4 border-t border-gray-700/50 bg-gray-900/30">
+                  <div className="flex items-center justify-center space-x-3">
+                    {[player.imageUrl, player.imageUrl2, player.imageUrl3]
+                      .filter(Boolean)
+                      .map((src, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveImageIndex(idx)}
+                          className={`w-16 h-16 rounded overflow-hidden border ${activeImageIndex === idx ? 'border-[#f9fd06]' : 'border-gray-700'} focus:outline-none focus:ring-2 focus:ring-[#f9fd06]/50`}
+                          aria-label={`View image ${idx + 1}`}
+                        >
+                          <img src={src} alt={`${player.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
 
               {/* Player Identity */}
               <div className="p-6 text-center">
@@ -147,7 +175,7 @@ export const PlayerDetail = () => {
                       Preferred Foot
                     </div>
                     <div className="text-white font-bold text-xl mt-1">
-                      {player.foot || 'N/A'}
+                      {player.preferredFoot || 'N/A'}
                     </div>
                   </div>
                 </div>
@@ -166,19 +194,19 @@ export const PlayerDetail = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-gradient-to-br from-[#339c0c]/20 to-[#339c0c]/40 p-4 rounded-lg border border-[#339c0c]/30">
                   <div className="text-gray-300">Matches</div>
-                  <div className="text-3xl font-bold text-white">{player.matches || '0'}</div>
+                  <div className="text-3xl font-bold text-white">{player.matchesPlayed ?? '0'}</div>
                 </div>
                 <div className="bg-gradient-to-br from-[#f9fd06]/20 to-[#f9fd06]/40 p-4 rounded-lg border border-[#f9fd06]/30">
                   <div className="text-gray-300">Goals</div>
-                  <div className="text-3xl font-bold text-white">{player.goals || '0'}</div>
+                  <div className="text-3xl font-bold text-white">{player.goalsScored ?? '0'}</div>
                 </div>
                 <div className="bg-gradient-to-br from-[#339c0c]/20 to-[#339c0c]/40 p-4 rounded-lg border border-[#339c0c]/30">
                   <div className="text-gray-300">Assists</div>
-                  <div className="text-3xl font-bold text-white">{player.assists || '0'}</div>
+                  <div className="text-3xl font-bold text-white">{player.assists ?? '0'}</div>
                 </div>
                 <div className="bg-gradient-to-br from-[#f9fd06]/20 to-[#f9fd06]/40 p-4 rounded-lg border border-[#f9fd06]/30">
                   <div className="text-gray-300">Clean Sheets</div>
-                  <div className="text-3xl font-bold text-white">{player.cleanSheets || '0'}</div>
+                  <div className="text-3xl font-bold text-white">{player.cleanSheets ?? '0'}</div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -188,10 +216,10 @@ export const PlayerDetail = () => {
                     <div className="w-full bg-gray-700 rounded-full h-2.5">
                       <div 
                         className="bg-gradient-to-r from-[#339c0c] to-[#f9fd06] h-2.5 rounded-full" 
-                        style={{ width: `${player.passAccuracy || 0}%` }}
+                        style={{ width: `${player.passAccuracy ?? 0}%` }}
                       ></div>
                     </div>
-                    <span className="ml-2 text-white font-medium">{player.passAccuracy || '0'}%</span>
+                    <span className="ml-2 text-white font-medium">{player.passAccuracy ?? '0'}%</span>
                   </div>
                 </div>
                 <div className="bg-gray-800/50 p-4 rounded-lg">
@@ -200,10 +228,10 @@ export const PlayerDetail = () => {
                     <div className="w-full bg-gray-700 rounded-full h-2.5">
                       <div 
                         className="bg-gradient-to-r from-[#339c0c] to-[#f9fd06] h-2.5 rounded-full" 
-                        style={{ width: `${player.tackleSuccess || 0}%` }}
+                        style={{ width: `${player.tackleSuccessRate ?? 0}%` }}
                       ></div>
                     </div>
-                    <span className="ml-2 text-white font-medium">{player.tackleSuccess || '0'}%</span>
+                    <span className="ml-2 text-white font-medium">{player.tackleSuccessRate ?? '0'}%</span>
                   </div>
                 </div>
               </div>
@@ -227,16 +255,21 @@ export const PlayerDetail = () => {
                 Career Highlights
               </h2>
               <ul className="space-y-3">
-                {player.highlights?.length > 0 ? (
-                  player.highlights.map((highlight, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="inline-block w-2 h-2 bg-[#f9fd06] rounded-full mt-2 mr-3"></span>
-                      <span className="text-gray-300">{highlight}</span>
-                    </li>
-                  ))
-                ) : (
-                  <li className="text-gray-400">No career highlights recorded</li>
-                )}
+                {(() => {
+                  const highlightsArray = Array.isArray(player.careerHighlights)
+                    ? player.careerHighlights
+                    : (player.careerHighlights ? String(player.careerHighlights).split(/\r?\n|\u2022|\|/).map(s => s.trim()).filter(Boolean) : []);
+                  return highlightsArray.length > 0 ? (
+                    highlightsArray.map((highlight, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="inline-block w-2 h-2 bg-[#f9fd06] rounded-full mt-2 mr-3"></span>
+                        <span className="text-gray-300">{highlight}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-gray-400">No career highlights recorded</li>
+                  );
+                })()}
               </ul>
             </div>
           </div>

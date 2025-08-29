@@ -1,9 +1,54 @@
 import { format } from 'date-fns';
+import parseISO from 'date-fns/parseISO';
+import isValid from 'date-fns/isValid';
 
 export const MatchCard = ({ match }) => {
-  const isLive = match.status === 'live';
-  const isUpcoming = match.status === 'upcoming';
-  const isFinished = match.status === 'finished';
+  // Normalize backend/frontend status casing
+  const normalizedStatus = typeof match.status === 'string' ? match.status.toLowerCase() : '';
+  const isLive = normalizedStatus === 'ongoing';
+  const isUpcoming = normalizedStatus === 'scheduled' || normalizedStatus === 'scheduled'.toLowerCase();
+  const isFinished = normalizedStatus === 'completed';
+
+  // Helper to get the first scorer's name if goals exist
+  const getFirstScorerName = () => {
+    if (match.goals && match.goals.length > 0) {
+      return match.goals[0].scorerName || 'N/A';
+    }
+    return null;
+  };
+
+  // Helper to get a snippet of the match report
+  const getMatchReportSnippet = () => {
+    if (match.matchReport && match.matchReport.length > 100) {
+      return match.matchReport.substring(0, 100) + '...';
+    }
+    return match.matchReport || '';
+  };
+
+  // Safely get the date and time from matchDateTime
+  let dateObj = null;
+  if (match.matchDateTime) {
+    if (typeof match.matchDateTime === 'string') {
+      const parsed = parseISO(match.matchDateTime);
+      dateObj = isValid(parsed) ? parsed : null;
+    } else if (match.matchDateTime instanceof Date) {
+      dateObj = isValid(match.matchDateTime) ? match.matchDateTime : null;
+    } else {
+      const constructed = new Date(match.matchDateTime);
+      dateObj = isValid(constructed) ? constructed : null;
+    }
+  }
+  const isValidDate = !!dateObj && isValid(dateObj);
+
+  // Format the date using the correctly parsed dateObj
+  const formattedDate = isValidDate
+    ? format(dateObj, 'EEEE, MMMM do') // Use the correctly parsed dateObj
+    : 'Invalid Date';
+
+  // Get the time part reliably using getHours and getMinutes
+  const displayTime = isValidDate
+    ? `${dateObj.getHours().toString().padStart(2, '0')}:${dateObj.getMinutes().toString().padStart(2, '0')}`
+    : 'N/A';
 
   return (
     <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl overflow-hidden shadow-2xl hover:shadow-[0_20px_50px_-10px_rgba(249,253,6,0.2)] transition-all duration-500 group">
@@ -20,11 +65,11 @@ export const MatchCard = ({ match }) => {
       {/* MATCH DATE HEADER */}
       <div className={`p-4 ${isLive ? 'bg-red-900/30' : 'bg-[#339c0c]/20'} backdrop-blur-sm`}>
         <p className="text-center font-bold text-white/90">
-          {format(new Date(match.date), 'EEEE, MMMM do')}
+          {formattedDate} {/* Use the safely formatted date */}
         </p>
         <div className="flex justify-center items-center mt-1 space-x-4">
           <span className="text-sm font-medium text-[#f9fd06]">
-            {match.time}
+            {displayTime} {/* Use the safely extracted time */}
           </span>
           <span className="text-white/60 text-sm">•</span>
           <span className="text-sm text-white/70">
@@ -45,15 +90,15 @@ export const MatchCard = ({ match }) => {
           <div className="text-center w-2/5">
             <div className="h-20 w-20 mx-auto mb-3 bg-gray-800 p-1 rounded-full border-2 border-[#339c0c]/30 group-hover:border-[#f9fd06]/50 transition-all">
               <img 
-                src={match.homeTeam.logo || '/images/team-default.png'} 
-                alt={match.homeTeam.name} 
+                src={match.homeTeam?.logoUrl || '/images/team-default.png'} 
+                alt={match.homeTeam?.name} 
                 className="h-full w-full object-contain p-1"
               />
             </div>
-            <h3 className="font-bold text-white truncate px-2">{match.homeTeam.name}</h3>
+            <h3 className="font-bold text-white truncate px-2">{match.homeTeam?.name}</h3>
             {isFinished && (
               <div className="text-3xl font-black mt-2 text-white">
-                {match.homeTeam.score}
+                {match.homeScore}
               </div>
             )}
           </div>
@@ -67,11 +112,11 @@ export const MatchCard = ({ match }) => {
             ) : (
               <>
                 <div className={`text-3xl font-black mb-1 ${isLive ? 'text-[#f9fd06] animate-pulse' : 'text-white'}`}>
-                  {match.homeTeam.score} - {match.awayTeam.score}
+                  {match.homeScore} - {match.awayScore}
                 </div>
                 {isLive && (
                   <div className="text-xs font-medium bg-gray-800 text-[#f9fd06] px-2 py-0.5 rounded-full">
-                    {match.minute}' minute
+                    {match.minute}' minute {/* Assuming 'minute' is available for live matches */}
                   </div>
                 )}
               </>
@@ -82,18 +127,55 @@ export const MatchCard = ({ match }) => {
           <div className="text-center w-2/5">
             <div className="h-20 w-20 mx-auto mb-3 bg-gray-800 p-1 rounded-full border-2 border-[#339c0c]/30 group-hover:border-[#f9fd06]/50 transition-all">
               <img 
-                src={match.awayTeam.logo || '/images/team-default.png'} 
-                alt={match.awayTeam.name} 
+                src={match.awayTeam?.logoUrl || '/images/team-default.png'} 
+                alt={match.awayTeam?.name} 
                 className="h-full w-full object-contain p-1"
               />
             </div>
-            <h3 className="font-bold text-white truncate px-2">{match.awayTeam.name}</h3>
+            <h3 className="font-bold text-white truncate px-2">{match.awayTeam?.name}</h3>
             {isFinished && (
               <div className="text-3xl font-black mt-2 text-white">
-                {match.awayTeam.score}
+                {match.awayScore}
               </div>
             )}
           </div>
+        </div>
+
+        {/* NEW SECTIONS FOR ADDITIONAL DETAILS */}
+        <div className="mt-4 text-center text-sm text-gray-400">
+          {/* Man of the Match */}
+          {match.manOfTheMatch && (
+            <div className="flex items-center justify-center mb-2">
+              <span className="font-semibold text-white mr-2">Man of the Match:</span>
+              <div className="flex items-center">
+                <img 
+                  src={match.manOfTheMatch.imageUrl || '/images/player-default.png'} 
+                  alt={match.manOfTheMatch.name} 
+                  className="w-8 h-8 rounded-full mr-2 object-cover border-2 border-[#f9fd06]/30"
+                />
+                <span className="text-white">{match.manOfTheMatch.name}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Goals Summary */}
+          {match.goals && match.goals.length > 0 && (
+            <div className="mb-2">
+              <span className="font-semibold text-white mr-2">Goals:</span>
+              <span className="text-white">{match.goals.length}</span>
+              {getFirstScorerName() && (
+                <span className="ml-2 text-gray-300"> (First: {getFirstScorerName()})</span>
+              )}
+            </div>
+          )}
+
+          {/* Match Report Snippet */}
+          {match.matchReport && (
+            <div>
+              <span className="font-semibold text-white mr-2">Report:</span>
+              <span className="text-gray-300">{getMatchReportSnippet()}</span>
+            </div>
+          )}
         </div>
 
         {/* MATCH PROGRESS BAR (FOR LIVE MATCHES) */}

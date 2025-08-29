@@ -1,24 +1,19 @@
-import { useState, useEffect } from 'react';
-import { getUpcomingMatches, getPastMatches } from '../services/matchService';
+import { useState, useEffect, useMemo } from 'react';
+import { getMatches } from '../services/matchService';
 import { MatchCard } from '../components/common/MatchCard';
 
 export const Matches = () => {
-  const [upcomingMatches, setUpcomingMatches] = useState([]);
-  const [pastMatches, setPastMatches] = useState([]);
+  const [allMatches, setAllMatches] = useState([]);
   const [activeTab, setActiveTab] = useState('upcoming');
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState('All');
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         setLoading(true);
-        if (activeTab === 'upcoming') {
-          const data = await getUpcomingMatches();
-          setUpcomingMatches(data.map(match => ({ ...match, status: 'upcoming' })));
-        } else {
-          const data = await getPastMatches();
-          setPastMatches(data.map(match => ({ ...match, status: 'finished' })));
-        }
+        const data = await getMatches();
+        setAllMatches(data);
       } catch (error) {
         console.error('Error fetching matches:', error);
       } finally {
@@ -26,7 +21,29 @@ export const Matches = () => {
       }
     };
     fetchMatches();
-  }, [activeTab]);
+  }, []);
+
+  const categories = useMemo(() => {
+    const set = new Set(['All']);
+    allMatches.forEach(m => { if (m.competition) set.add(m.competition); });
+    return Array.from(set);
+  }, [allMatches]);
+
+  const upcomingMatches = useMemo(() => {
+    const list = allMatches.filter(m => m.status === 'SCHEDULED');
+    return list.sort((a, b) => new Date(a.matchDateTime || 0) - new Date(b.matchDateTime || 0));
+  }, [allMatches]);
+
+  const pastMatches = useMemo(() => {
+    const list = allMatches.filter(m => m.status === 'COMPLETED');
+    return list.sort((a, b) => new Date(b.matchDateTime || 0) - new Date(a.matchDateTime || 0));
+  }, [allMatches]);
+
+  const filtered = useMemo(() => {
+    const source = activeTab === 'upcoming' ? upcomingMatches : pastMatches;
+    if (category === 'All') return source;
+    return source.filter(m => (m.competition || '') === category);
+  }, [activeTab, category, upcomingMatches, pastMatches]);
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 min-h-screen">
@@ -36,7 +53,7 @@ export const Matches = () => {
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12AIzaSyBDYmsmaG-MD6XnzGMSB3ORfuE9GNAbe7M">
           <span className="inline-block text-[#339c0c] font-bold mb-3 tracking-wider uppercase text-sm">
             Match Center
           </span>
@@ -76,6 +93,23 @@ export const Matches = () => {
           </div>
         </div>
 
+        {/* Category Filter */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex flex-wrap gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold border transition ${
+                  category === cat ? 'bg-[#f9fd06] text-black border-[#f9fd06]' : 'border-gray-600 text-gray-300 hover:text-white'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Content */}
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -85,9 +119,9 @@ export const Matches = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(activeTab === 'upcoming' ? upcomingMatches : pastMatches).length > 0 ? (
-              (activeTab === 'upcoming' ? upcomingMatches : pastMatches).map((match) => (
-                <MatchCard key={match.id} match={match} />
+            {filtered.length > 0 ? (
+              filtered.map((match) => (
+                <MatchCard key={match.id} match={{...match, status: match.status?.toLowerCase()}} />
               ))
             ) : (
               <div className="col-span-full text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700">
@@ -120,3 +154,9 @@ export const Matches = () => {
     </div>
   );
 };
+
+
+
+
+
+

@@ -8,6 +8,7 @@ import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Team } from './pages/Team';
 import { Matches } from './pages/Matches';
+import { MatchDetail } from './pages/MatchDetail';
 import { News } from './pages/News';
 import { NewsDetail } from './pages/NewsDetail';
 import { Gallery } from './pages/Gallery';
@@ -33,6 +34,9 @@ import { TeamsAdmin } from './pages/admin/TeamsAdmin';
 import { TeamsForm } from './pages/admin/TeamsForm';
 import { GalleryAdmin } from './pages/admin/GalleryAdmin';
 import { GalleryForm } from './pages/admin/GalleryForm';
+import { GalleryEdit } from './pages/admin/GalleryEdit';
+import { SponsorsAdmin } from './pages/admin/SponsorsAdmin';
+import { SponsorForm } from './pages/admin/SponsorForm';
 
 function AppWrapper() {
   return (
@@ -61,6 +65,7 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/players/:id" element={<PlayerDetail />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/matches/:id" element={<MatchDetail />} />
           <Route path="/news" element={<News />} />
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/gallery" element={<Gallery />} />
@@ -77,6 +82,7 @@ function App() {
           <Route path="/admin/players/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><PlayerForm /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/matches" element={<ProtectedRoute adminOnly={true}><AdminLayout><MatchesAdmin /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/matches/new" element={<ProtectedRoute adminOnly={true}><AdminLayout><MatchForm /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/matches/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><MatchForm /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/news" element={<ProtectedRoute adminOnly={true}><AdminLayout><NewsAdmin /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/news/new" element={<ProtectedRoute adminOnly={true}><AdminLayout><NewsForm /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/news/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><NewsForm /></AdminLayout></ProtectedRoute>} />
@@ -87,7 +93,10 @@ function App() {
           <Route path="/admin/teams/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><TeamsForm /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/gallery" element={<ProtectedRoute adminOnly={true}><AdminLayout><GalleryAdmin /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/gallery/new" element={<ProtectedRoute adminOnly={true}><AdminLayout><GalleryForm /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/gallery/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><GalleryForm /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/gallery/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><GalleryEdit /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/sponsors" element={<ProtectedRoute adminOnly={true}><AdminLayout><SponsorsAdmin /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/sponsors/new" element={<ProtectedRoute adminOnly={true}><AdminLayout><SponsorForm /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/sponsors/edit/:id" element={<ProtectedRoute adminOnly={true}><AdminLayout><SponsorForm /></AdminLayout></ProtectedRoute>} />
 
           {/* 404 Page */}
           <Route path="*" element={<div className="text-center py-20">Page Not Found</div>} />

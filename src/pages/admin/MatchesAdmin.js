@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getMatches, getUpcomingMatches, getPastMatches, deleteMatch } from '../../services/matchService';
 import { format } from 'date-fns';
+import parseISO from 'date-fns/parseISO';
+import isValid from 'date-fns/isValid';
 
 export const MatchesAdmin = () => {
   const [matches, setMatches] = useState([]);
@@ -77,9 +79,28 @@ export const MatchesAdmin = () => {
                       <p className="text-lg font-bold">{match.homeScore ?? '-'}</p>
                     </div>
                     <div className="text-center w-1/3">
-                      <p className="text-gray-500">
-                        {format(new Date(match.date), 'MMM d, yyyy')} at {match.time}
-                      </p>
+                      {(() => {
+                        let dateObj = null;
+                        if (match.matchDateTime) {
+                          if (typeof match.matchDateTime === 'string') {
+                            const parsed = parseISO(match.matchDateTime);
+                            dateObj = isValid(parsed) ? parsed : null;
+                          } else if (match.matchDateTime instanceof Date) {
+                            dateObj = isValid(match.matchDateTime) ? match.matchDateTime : null;
+                          } else {
+                            const constructed = new Date(match.matchDateTime);
+                            dateObj = isValid(constructed) ? constructed : null;
+                          }
+                        }
+                        if (dateObj) {
+                          return (
+                            <p className="text-gray-500">
+                              {format(dateObj, 'MMM d, yyyy')} at {format(dateObj, 'HH:mm')}
+                            </p>
+                          );
+                        }
+                        return <p className="text-gray-500">Date/Time TBD</p>;
+                      })()}
                       <p className="text-xl font-bold">vs</p>
                       <p className="text-sm">{match.competition}</p>
                     </div>

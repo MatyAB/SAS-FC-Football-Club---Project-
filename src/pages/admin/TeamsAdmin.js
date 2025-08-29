@@ -49,9 +49,14 @@ export const TeamsAdmin = () => {
         ) : (
           teams.map(team => (
             <div key={team.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200 flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-bold">{team.name}</h2>
-                <p className="text-sm text-gray-600">{team.description}</p>
+              <div className="flex items-center space-x-4">
+                {team.logoUrl && (
+                  <img src={team.logoUrl} alt={`${team.name} logo`} className="w-12 h-12 object-contain rounded" />
+                )}
+                <div>
+                  <h2 className="text-xl font-bold">{team.name}</h2>
+                  <p className="text-sm text-gray-600">{team.shortName || ''}</p>
+                </div>
               </div>
               <div className="flex space-x-2">
                 <Link

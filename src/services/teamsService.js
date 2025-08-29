@@ -45,16 +45,14 @@ export const createTeam = async (formData) => {
 
 
 
-// Update a team (admin)
-export const updateTeam = async (id, teamData) => {
-  const token = localStorage.getItem('adminToken');
+// Update a team (admin) - multipart/form-data to support optional logo update
+export const updateTeam = async (id, formData) => {
   const response = await fetch(`${API_BASE_URL}/teams/${id}`, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
     },
-    body: JSON.stringify(teamData)
+    body: formData,
   });
   if (!response.ok) throw new Error('Failed to update team');
   return await response.json();

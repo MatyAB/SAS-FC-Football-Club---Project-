@@ -7,7 +7,6 @@ const galleryCategories = ['matches', 'training', 'events', 'others'];
 export const GalleryForm = () => {
   const [caption, setCaption] = useState('');
   const [category, setCategory] = useState('');
-  const [uploaderName, setUploaderName] = useState('');
   const [tabImages, setTabImages] = useState([]); // multiple images
   const [thumbnailImage, setThumbnailImage] = useState(null); // single image
   const [error, setError] = useState('');
@@ -24,7 +23,7 @@ export const GalleryForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!caption || !category || !uploaderName || tabImages.length === 0 || !thumbnailImage) {
+    if (!caption || !category || tabImages.length === 0 || !thumbnailImage) {
       setError('Please fill in all fields and upload images.');
       return;
     }
@@ -32,29 +31,21 @@ export const GalleryForm = () => {
     setError('');
 
     try {
-      // For each tab image, you might upload separately or handle multiple uploads in your API
-      // Here, assuming you upload all tab images one by one (you can adapt based on your API)
-
+      // Upload tab images
       for (const file of tabImages) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('caption', caption);
-        formData.append('category', category);
-        formData.append('uploaderName', uploaderName);
-        formData.append('isThumbnail', 'false');
-
-        await uploadGalleryImage(formData);
+        await uploadGalleryImage({
+          file: file,
+          caption: caption,
+          category: category,
+        });
       }
 
-      // Upload thumbnail separately (or your API may accept it as part of a batch)
-      const thumbFormData = new FormData();
-      thumbFormData.append('file', thumbnailImage);
-      thumbFormData.append('caption', caption);
-      thumbFormData.append('category', category);
-      thumbFormData.append('uploaderName', uploaderName);
-      thumbFormData.append('isThumbnail', 'true');
-
-      await uploadGalleryImage(thumbFormData);
+      // Upload thumbnail
+      await uploadGalleryImage({
+        file: thumbnailImage,
+        caption: caption,
+        category: category,
+      });
 
       navigate('/admin/gallery');
     } catch (err) {
@@ -91,17 +82,6 @@ export const GalleryForm = () => {
               <option key={cat} value={cat}>{cat.charAt(0).toUpperCase() + cat.slice(1)}</option>
             ))}
           </select>
-        </label>
-
-        <label className="block mb-2">
-          Uploader Name <span className="text-red-600">*</span>
-          <input
-            type="text"
-            value={uploaderName}
-            onChange={(e) => setUploaderName(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
         </label>
 
         <label className="block mb-2">

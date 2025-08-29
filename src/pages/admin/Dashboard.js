@@ -37,6 +37,11 @@ export const Dashboard = () => {
               </Link>
             </li>
             <li>
+              <Link to="/admin/sponsors/new" className="text-sas-green-700 hover:underline font-medium">
+                Add New Sponsor
+              </Link>
+            </li>
+            <li>
               <Link to="/admin/users" className="text-sas-green-700 hover:underline font-medium">
                 Manage Users
               </Link>

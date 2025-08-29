@@ -29,45 +29,87 @@ export const getPlayers = async () => {
   return await response.json();
 };
 
-// Create new news article
-export const createPlayer = async (player, imageFile) => {
-  const formData = new FormData();
-  for (const key in player) {
-    formData.append(key, player[key]);
+// Helper function to handle API errors
+const handleApiError = async (response) => {
+  let errorData;
+  try {
+    errorData = await response.json();
+  } catch (e) {
+    // If response is not JSON, use text
+    errorData = { message: await response.text() };
   }
+  throw new Error(errorData.message || `API request failed with status ${response.status}`);
+};
+
+// Create new player
+export const createPlayer = async (playerData, imageFile, image2File, image3File) => {
+  const formData = new FormData();
+  
+  // Create a Blob for the player data with application/json content type
+  const playerBlob = new Blob([JSON.stringify(playerData)], { type: 'application/json' });
+  formData.append('player', playerBlob);
+
+  // Append image files
   if (imageFile) {
     formData.append('image', imageFile);
+  }
+  if (image2File) {
+    formData.append('image2', image2File);
+  }
+  if (image3File) {
+    formData.append('image3', image3File);
   }
 
   const response = await fetch(`${API_BASE_URL}/players`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+      // Content-Type is automatically set to multipart/form-data by FormData,
+      // and the 'player' part will have its Content-Type set to 'application/json' due to the Blob type.
+      // Do NOT manually set 'Content-Type': 'multipart/form-data' here.
     },
     body: formData
   });
-  if (!response.ok) throw new Error('Failed to create news');
+  
+  if (!response.ok) {
+    await handleApiError(response);
+  }
   return await response.json();
 };
 
-// Update news article
-export const updatePlayer = async (id, player, imageFile) => {
+// Update player
+export const updatePlayer = async (id, playerData, imageFile, image2File, image3File) => {
   const formData = new FormData();
-  for (const key in player) {
-    formData.append(key, player[key]);
-  }
+  
+  // Create a Blob for the player data with application/json content type
+  const playerBlob = new Blob([JSON.stringify(playerData)], { type: 'application/json' });
+  formData.append('player', playerBlob);
+
+  // Append image files
   if (imageFile) {
     formData.append('image', imageFile);
+  }
+  if (image2File) {
+    formData.append('image2', image2File);
+  }
+  if (image3File) {
+    formData.append('image3', image3File);
   }
 
   const response = await fetch(`${API_BASE_URL}/players/${id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+      // Content-Type is automatically set to multipart/form-data by FormData,
+      // and the 'player' part will have its Content-Type set to 'application/json' due to the Blob type.
+      // Do NOT manually set 'Content-Type': 'multipart/form-data' here.
     },
     body: formData
   });
-  if (!response.ok) throw new Error('Failed to update news');
+  
+  if (!response.ok) {
+    await handleApiError(response);
+  }
   return await response.json();
 };
 

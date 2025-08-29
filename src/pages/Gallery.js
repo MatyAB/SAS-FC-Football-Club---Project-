@@ -5,7 +5,7 @@ import { getGalleries } from '../services/galleryService';
 export const Gallery = () => {
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('ALL');
 
   useEffect(() => {
     const fetchGalleries = async () => {
@@ -22,9 +22,9 @@ export const Gallery = () => {
   }, []);
 
   // Filter galleries by category
-  const filteredGalleries = activeCategory === 'All' 
+  const filteredGalleries = activeCategory === 'ALL' 
     ? galleries 
-    : galleries.filter(gallery => gallery.category === activeCategory);
+    : galleries.filter(gallery => (gallery.category || '').toUpperCase() === activeCategory);
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 min-h-screen">
@@ -48,7 +48,7 @@ export const Gallery = () => {
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {['All', 'Matches', 'Training', 'Community', 'Events'].map((category) => (
+          {['ALL', 'MATCHES', 'TRAINING', 'EVENTS', 'HISTORY'].map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
@@ -58,7 +58,7 @@ export const Gallery = () => {
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              {category}
+              {category.charAt(0) + category.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
@@ -86,7 +86,7 @@ export const Gallery = () => {
           <div className="text-center py-16 bg-gray-800/50 rounded-xl border border-gray-700">
             <div className="text-gray-400 mb-3">No galleries found</div>
             <p className="text-gray-500 max-w-md mx-auto">
-              {activeCategory === 'All' 
+              {activeCategory === 'ALL' 
                 ? 'Check back later for updates' 
                 : `No ${activeCategory.toLowerCase()} galleries available`}
             </p>

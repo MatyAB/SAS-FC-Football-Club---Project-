@@ -37,6 +37,9 @@ const AdminNav = () => {
             <Link to="/admin/gallery" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               Gallery
             </Link>
+            <Link to="/admin/sponsors" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
+              Sponsors
+            </Link>
             <Link to="/admin/users" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-sas-green-700">
               Users
             </Link>

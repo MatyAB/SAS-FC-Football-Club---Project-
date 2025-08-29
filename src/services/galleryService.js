@@ -1,153 +1,121 @@
 const API_BASE_URL = 'http://localhost:8080/api';
 
-/**
- * Fetches all gallery images from the backend
- * @returns {Promise<Array>} Array of gallery images
- */
-// 
+// Fetch all gallery images
 export const getGalleries = async () => {
   const response = await fetch(`${API_BASE_URL}/gallery`);
   if (!response.ok) throw new Error('Failed to fetch gallery');
   return await response.json();
 };
 
+// Fetch single gallery image by ID
 export const getGalleryById = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/${id}`);
+  const response = await fetch(`${API_BASE_URL}/gallery/images/${id}`);
   if (!response.ok) throw new Error('Failed to fetch gallery item');
   return await response.json();
 };
+
+// Alias for all images (admin usage)
 export const getGalleryImages = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images`);
-    
+    const response = await fetch(`${API_BASE_URL}/gallery`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
     return await response.json();
   } catch (error) {
     console.error('Error fetching gallery images:', error);
-    // Return a default empty array if API fails
-    return [
-      {
-        id: 1,
-        url: '/images/gallery/default-1.jpg',
-        caption: 'Team celebration after winning the regional championship',
-        category: 'matches',
-        date: '2023-05-15'
-      },
-      {
-        id: 2,
-        url: '/images/gallery/default-2.jpg',
-        caption: 'Youth team training session',
-        category: 'training',
-        date: '2023-04-22'
-      }
-    ];
+    return [];
   }
 };
 
-/**
- * Uploads a new image to the gallery
- * @param {Object} imageData - Image file and metadata
- * @param {File} imageData.file - The image file
- * @param {string} imageData.caption - Image caption
- * @param {string} imageData.category - Image category
- * @returns {Promise<Object>} The uploaded image data
- */
+// Upload image(s)
 export const uploadGalleryImage = async (imageData) => {
   const formData = new FormData();
-  formData.append('file', imageData.file);
+  if (!imageData.file) {
+    throw new Error('No file provided for upload.');
+  }
+  formData.append('files', imageData.file);
   formData.append('caption', imageData.caption);
   formData.append('category', imageData.category);
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/upload`, {
-      method: 'POST',
-      body: formData,
-      // Note: Don't set Content-Type header when using FormData
-      // The browser will set it automatically with the correct boundary
-    });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed with status: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    throw error;
+  if (imageData.uploaderId) {
+    formData.append('uploaderId', imageData.uploaderId);
   }
+
+  const response = await fetch(`${API_BASE_URL}/gallery/upload-multiple`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`Upload failed with status: ${response.status}`);
+  }
+
+  return await response.json();
 };
 
-/**
- * Deletes an image from the gallery
- * @param {number} imageId - ID of the image to delete
- * @returns {Promise<Object>} Delete confirmation
- */
+// Delete an image
 export const deleteGalleryImage = async (imageId) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images/${imageId}`, {
+    const response = await fetch(`${API_BASE_URL}/gallery/images/${imageId}`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (!response.ok) {
       throw new Error(`Delete failed with status: ${response.status}`);
     }
 
-    return await response.json();
+    // Backend returns 204 No Content, so don't try to parse JSON
+    return true;
   } catch (error) {
     console.error('Error deleting image:', error);
     throw error;
   }
 };
 
-/**
- * Gets images by category
- * @param {string} category - Category to filter by
- * @returns {Promise<Array>} Filtered array of images
- */
+// Get images by category (client-side filter against enums from backend)
 export const getImagesByCategory = async (category) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/images?category=${category}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
+    const all = await getGalleryImages();
+    const normalized = (category || '').toString().toUpperCase();
+    if (!normalized || normalized === 'ALL') return all;
+    return all.filter(img => (img.category || '').toString().toUpperCase() === normalized);
   } catch (error) {
     console.error(`Error fetching ${category} gallery images:`, error);
     return [];
   }
 };
 
-/**
- * Updates an existing gallery image
- * @param {number} imageId - ID of the image to update
- * @param {Object} updateData - New caption and/or category
- * @returns {Promise<Object>} Updated image data
- */
+// Update an image (caption/category) using form data per controller's @RequestParam
 export const updateGalleryImage = async (imageId, updateData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/images/${imageId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updateData),
-    });
+  const form = new FormData();
+  if (updateData.caption != null) form.append('caption', updateData.caption);
+  if (updateData.category != null) form.append('category', updateData.category);
 
-    if (!response.ok) {
-      throw new Error(`Update failed with status: ${response.status}`);
-    }
+  const response = await fetch(`${API_BASE_URL}/gallery/images/${imageId}`, {
+    method: 'PUT',
+    body: form,
+  });
 
-    return await response.json();
-  } catch (error) {
-    console.error('Error updating image:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Update failed with status: ${response.status}`);
   }
+
+  return await response.json();
+};
+
+// Replace an image file
+export const replaceGalleryImage = async (imageId, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_BASE_URL}/gallery/images/${imageId}/replace-file`, {
+    method: 'PUT',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error(`File replacement failed with status: ${response.status}`);
+  }
+
+  return await response.json();
 };

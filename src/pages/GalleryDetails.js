@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { FaArrowLeft, FaTimes, FaExpand } from 'react-icons/fa';
+import { getGalleryById, getImagesByCategory } from '../services/galleryService';
+
+const resolveImageUrl = (url) => {
+  if (!url) return '/images/gallery-default.jpg';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/uploads/')) return `http://localhost:8080${url}`;
+  return url;
+};
 
 export const GalleryDetails = () => {
   const { id } = useParams();
@@ -11,25 +18,45 @@ export const GalleryDetails = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Mock data fetch - replace with your API call
   useEffect(() => {
     const fetchGallery = async () => {
       try {
-        // const data = await getGalleryById(id);
-        const mockData = {
-          id,
-          title: "Team Training Session",
-          date: "2023-11-15",
-          images: Array(12).fill().map((_, i) => ({
-            id: i,
-            url: `https://source.unsplash.com/random/800x600/?soccer,training,${i}`,
-            caption: i % 2 === 0 ? `Training drill #${i+1}` : null
-          })),
-          category: "Training"
-        };
-        setGallery(mockData);
+        const item = await getGalleryById(id);
+        const category = (item.category || '').toUpperCase();
+        const allInCategory = await getImagesByCategory(category);
+
+        // Filter by same caption (exact match)
+        const targetCaption = item.caption || '';
+        let subset = allInCategory.filter(p => (p.caption || '') === targetCaption);
+        if (subset.length === 0) subset = allInCategory; // fallback to category if no caption group
+
+        // Sort: newest first, then caption
+        subset.sort((a, b) => {
+          const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          if (tb !== ta) return tb - ta;
+          return (a.caption || '').localeCompare(b.caption || '');
+        });
+
+        const images = subset.map((p) => ({
+          id: p.id,
+          url: resolveImageUrl(p.url),
+          caption: p.caption,
+          createdAt: p.createdAt,
+        }));
+
+        const startIndex = Math.max(0, images.findIndex(img => img.id === item.id));
+
+        setGallery({
+          id: item.id,
+          title: targetCaption || `${category} Gallery`,
+          date: item.createdAt,
+          images,
+          category,
+        });
+        setCurrentIndex(startIndex);
       } catch (error) {
-        console.error("Failed to load gallery:", error);
+        console.error('Failed to load gallery:', error);
         navigate('/gallery');
       } finally {
         setLoading(false);
@@ -85,7 +112,7 @@ export const GalleryDetails = () => {
             onClick={() => navigate('/gallery')}
             className="flex items-center text-[#f9fd06] hover:text-white transition-colors"
           >
-            <FaArrowLeft className="w-5 h-5 mr-2" />
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             Back to Galleries
           </button>
           
@@ -105,23 +132,22 @@ export const GalleryDetails = () => {
         </div>
       </header>
 
-      {/* Thumbnail Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      {/* Masonry Grid */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 [column-fill:_balance]
+                        [--tw-shadow:0_10px_30px_rgba(0,0,0,0.2)]">
           {gallery?.images?.map((image, index) => (
-            <div 
-              key={image.id}
-              className="relative aspect-square overflow-hidden rounded-xl cursor-pointer hover:z-10"
-              onClick={() => openLightbox(index)}
-            >
-              <img
-                src={image.url}
-                alt={image.caption || `Gallery image ${index + 1}`}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+            <div key={image.id} className="mb-4 break-inside-avoid cursor-pointer group" onClick={() => openLightbox(index)}>
+              <div className="relative overflow-hidden rounded-xl shadow-[var(--tw-shadow)]">
+                <img
+                  src={resolveImageUrl(image.url)}
+                  alt={image.caption || `Gallery image ${index + 1}`}
+                  className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
                 {image.caption && (
-                  <p className="text-white text-sm truncate w-full">{image.caption}</p>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                    <p className="text-white text-sm line-clamp-2">{image.caption}</p>
+                  </div>
                 )}
               </div>
             </div>
@@ -155,7 +181,7 @@ export const GalleryDetails = () => {
             {/* Main Image */}
             <div className="relative">
               <img
-                src={gallery.images[currentIndex].url}
+                src={resolveImageUrl(gallery.images[currentIndex].url)}
                 alt={gallery.images[currentIndex].caption || `Gallery image ${currentIndex + 1}`}
                 className="max-h-[80vh] w-full object-contain rounded-lg"
               />
@@ -166,17 +192,12 @@ export const GalleryDetails = () => {
                   <p className="text-white font-medium">
                     {gallery.images[currentIndex].caption || `Image ${currentIndex + 1} of ${gallery.images.length}`}
                   </p>
-                  <div className="flex space-x-2">
-                    <button className="p-2 text-white hover:text-[#f9fd06] transition-colors">
-                      <FaExpand className="w-5 h-5" />
-                    </button>
-                    <button 
-                      onClick={closeLightbox}
-                      className="p-2 text-white hover:text-[#f9fd06] transition-colors"
-                    >
-                      <FaTimes className="w-5 h-5" />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={closeLightbox}
+                    className="p-2 text-white hover:text-[#f9fd06] transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
                 </div>
               </div>
             </div>

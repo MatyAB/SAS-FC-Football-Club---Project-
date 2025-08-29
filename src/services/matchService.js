@@ -7,18 +7,24 @@ export const getMatches = async () => {
   return await response.json();
 };
 
-// Get upcoming matches
+// Get upcoming matches (client-side filter)
 export const getUpcomingMatches = async () => {
-  const response = await fetch(`${API_BASE_URL}/matches?status=upcoming`);
-  if (!response.ok) throw new Error('Failed to fetch upcoming matches');
-  return await response.json();
+  const all = await getMatches();
+  const now = new Date();
+  return all
+    .filter(m => (m.status === 'SCHEDULED') && m.matchDateTime && !isNaN(new Date(m.matchDateTime)))
+    .filter(m => new Date(m.matchDateTime) > now)
+    .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime));
 };
 
-// Get past matches
+// Get past matches (client-side filter)
 export const getPastMatches = async () => {
-  const response = await fetch(`${API_BASE_URL}/matches?status=past`);
-  if (!response.ok) throw new Error('Failed to fetch past matches');
-  return await response.json();
+  const all = await getMatches();
+  const now = new Date();
+  return all
+    .filter(m => (m.status === 'COMPLETED') && m.matchDateTime && !isNaN(new Date(m.matchDateTime)))
+    .filter(m => new Date(m.matchDateTime) <= now)
+    .sort((a, b) => new Date(b.matchDateTime) - new Date(a.matchDateTime));
 };
 
 // Get single match
@@ -28,29 +34,22 @@ export const getMatch = async (id) => {
   return await response.json();
 };
 
-// ✅ Create new match using FormData
+// Create new match using JSON (backend expects @RequestBody)
 export const createMatch = async (matchData) => {
-  const formData = new FormData();
-
-  for (const key in matchData) {
-    if (matchData[key] !== null && matchData[key] !== undefined) {
-      formData.append(key, matchData[key]);
-    }
-  }
-
   const response = await fetch(`${API_BASE_URL}/matches`, {
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
     },
-    body: formData
+    body: JSON.stringify(matchData)
   });
 
   if (!response.ok) throw new Error('Failed to create match');
   return await response.json();
 };
 
-// Update match using JSON (Assuming backend accepts it)
+// Update match using JSON
 export const updateMatch = async (id, matchData) => {
   const response = await fetch(`${API_BASE_URL}/matches/${id}`, {
     method: 'PUT',
@@ -73,5 +72,6 @@ export const deleteMatch = async (id) => {
     }
   });
   if (!response.ok) throw new Error('Failed to delete match');
-  return await response.json();
+  // Backend returns 204 No Content; avoid parsing JSON
+  return true;
 };
