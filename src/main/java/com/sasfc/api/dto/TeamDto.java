@@ -1,6 +1,5 @@
 package com.sasfc.api.dto;
 
-import com.sasfc.api.model.enums.TeamCategory;
 import lombok.Data;
 
 import java.util.UUID;
@@ -13,5 +12,5 @@ public class TeamDto {
     private String logoUrl;
     private int foundedYear;
     private String homeStadium;
-    private TeamCategory category;
+    private String category;
 }

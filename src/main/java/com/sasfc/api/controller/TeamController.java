@@ -2,7 +2,6 @@ package com.sasfc.api.controller;
 
 import com.sasfc.api.dto.TeamDto;
 import com.sasfc.api.model.Team;
-import com.sasfc.api.model.enums.TeamCategory;
 import com.sasfc.api.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,17 +82,21 @@ public class TeamController {
 
     
     @GetMapping("/categories")
-    public ResponseEntity<List<TeamCategory>> getTeamCategories() {
-        return ResponseEntity.ok(List.of(TeamCategory.values()));
+    public ResponseEntity<List<String>> getTeamCategories() {
+        return ResponseEntity.ok(List.of("First Team", "Youth", "Staff"));
     }
 
     @GetMapping("/categories/{categoryName}")
-    public ResponseEntity<TeamCategory> getTeamCategoryByName(@PathVariable String categoryName) {
-        try {
-            TeamCategory category = TeamCategory.valueOf(categoryName.toUpperCase());
+    public ResponseEntity<String> getTeamCategoryByName(@PathVariable String categoryName) {
+        List<String> categories = List.of("First Team", "Youth", "Staff");
+        String category = categories.stream()
+            .filter(c -> c.equalsIgnoreCase(categoryName))
+            .findFirst()
+            .orElse(null);
+        if (category != null) {
             return ResponseEntity.ok(category);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // Or throw a specific exception
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

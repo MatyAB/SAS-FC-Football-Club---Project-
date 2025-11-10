@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
 import java.util.UUID;
-import com.sasfc.api.model.enums.TeamCategory;
 
 @Entity
 @Table(name = "teams")
@@ -25,9 +24,7 @@ public class Team {
     private int foundedYear;
     private String homeStadium;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TeamCategory category;
+    private String category;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)

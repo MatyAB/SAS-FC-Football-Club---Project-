@@ -20,7 +20,6 @@ com\sasfc\api\model\enums\MatchStatus.class
 com\sasfc\api\dto\LoginResponse.class
 com\sasfc\api\exception\DuplicateResourceException.class
 com\sasfc\api\exception\ResourceNotFoundException.class
-com\sasfc\api\model\enums\TeamCategory.class
 com\sasfc\api\dto\CreateRoleRequest.class
 com\sasfc\api\dto\LoginRequest.class
 com\sasfc\api\dto\PermissionDto.class

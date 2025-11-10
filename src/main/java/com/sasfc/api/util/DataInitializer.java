@@ -5,7 +5,6 @@ import com.sasfc.api.model.Role;
 import com.sasfc.api.repository.PermissionRepository;
 import com.sasfc.api.model.Team;
 import com.sasfc.api.model.User;
-import com.sasfc.api.model.enums.TeamCategory;
 import com.sasfc.api.repository.RoleRepository;
 import com.sasfc.api.repository.TeamRepository;
 import com.sasfc.api.repository.UserRepository;
@@ -66,9 +65,9 @@ public class DataInitializer implements CommandLineRunner {
             playerRead, playerWrite, newsRead, newsWrite, matchRead, matchWrite,
             galleryRead, galleryWrite, userManage
         ));
+        createRoleIfNotFound("ROLE_ADMIN", adminPermissions);
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                 .orElseThrow(() -> new RuntimeException("ADMIN role not found!"));
-        createRoleIfNotFound("ROLE_ADMIN", adminPermissions);
 
         // --- Create Admin User ---
         createUserIfNotFound("admin", "admin@sasfc.com", "password", adminRole);
@@ -103,10 +102,10 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     @Transactional
-    private void createTeamIfNotFound(String name, String shortName, String logoUrl, int foundedYear, String homeStadium, TeamCategory category) {
+    private void createTeamIfNotFound(String name, String shortName, String logoUrl, int foundedYear, String homeStadium, String category) {
         teamRepository.findByName(name)
             .ifPresentOrElse(
-                team -> {}, 
+                team -> {},
                 () -> {
                     Team team = new Team();
                     team.setName(name);
@@ -114,7 +113,7 @@ public class DataInitializer implements CommandLineRunner {
                     team.setLogoUrl(logoUrl);
                     team.setFoundedYear(foundedYear);
                     team.setHomeStadium(homeStadium);
-                    team.setCategory(category); 
+                    team.setCategory(category);
                     teamRepository.save(team);
                 }
             );

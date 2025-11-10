@@ -1,7 +1,6 @@
 package com.sasfc.api.dto;
 
 import com.sasfc.api.model.enums.PlayerPosition;
-import com.sasfc.api.model.enums.TeamCategory;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,7 +12,7 @@ public class PlayerDto {
     private UUID id;
     private String name;
     private PlayerPosition position;
-    private TeamCategory teamCategory;
+    private String teamCategory;
     private Integer jerseyNumber; // Changed to Integer to allow null for staff
     private int age;
     private String nationality;

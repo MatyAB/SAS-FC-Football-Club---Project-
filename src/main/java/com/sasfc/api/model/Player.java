@@ -1,7 +1,6 @@
 
 
 package com.sasfc.api.model;
-import com.sasfc.api.model.enums.TeamCategory;
 import com.sasfc.api.model.enums.PlayerPosition;
 import com.sasfc.api.model.enums.PreferredFoot; // <-- Import new enum
 import jakarta.persistence.*;
@@ -27,9 +26,8 @@ public class Player {
     @Column(nullable = true)
     private PlayerPosition position;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "team_category", nullable = true) 
-    private TeamCategory teamCategory;
+    @Column(name = "team_category", nullable = true)
+    private String teamCategory;
 
     @Column(nullable = true)
     private Integer jerseyNumber; // Changed to Integer to allow null for staff

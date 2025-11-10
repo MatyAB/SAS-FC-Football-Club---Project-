@@ -4,7 +4,6 @@ import com.sasfc.api.dto.TeamDto;
 import com.sasfc.api.exception.DuplicateResourceException;
 import com.sasfc.api.exception.ResourceNotFoundException;
 import com.sasfc.api.model.Team;
-import com.sasfc.api.model.enums.TeamCategory;
 import com.sasfc.api.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,9 +56,9 @@ public class TeamService {
         }
         existingTeam.setFoundedYear(teamDto.getFoundedYear());
         existingTeam.setHomeStadium(teamDto.getHomeStadium());
-        TeamCategory category = teamDto.getCategory();
-        if (category == null) {
-            throw new IllegalArgumentException("Team category cannot be null. Please provide a valid category.");
+        String category = teamDto.getCategory();
+        if (category == null || category.trim().isEmpty()) {
+            throw new IllegalArgumentException("Team category cannot be null or empty. Please provide a valid category.");
         }
         existingTeam.setCategory(category);
         return teamRepository.save(existingTeam);
