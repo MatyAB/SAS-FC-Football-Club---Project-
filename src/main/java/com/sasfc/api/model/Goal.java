@@ -26,6 +26,10 @@ public class Goal {
     @JoinColumn(name = "assist_player_id")
     private Player assistedBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     @Column(nullable = false)
     private Integer minuteScored;
 }

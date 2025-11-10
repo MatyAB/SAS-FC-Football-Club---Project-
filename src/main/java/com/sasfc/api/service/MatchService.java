@@ -234,6 +234,9 @@ public class MatchService {
                             }
 
                             goal.setMinuteScored(goalDto.getMinuteScored());
+                            if (scorer.getTeam() != null) {
+                                goal.setTeam(scorer.getTeam());
+                            }
                             // Set the relationship back to the match
                             goal.setMatch(match);
                             return goal;
@@ -251,14 +254,12 @@ public class MatchService {
                 }
             }
             default -> {
-                // For SCHEDULED/POSTPONED/CANCELLED: clear scores, report, goals, and MOTM
+                // For SCHEDULED/POSTPONED/CANCELLED: clear scores, report, and MOTM
                 match.setHomeScore(null);
                 match.setAwayScore(null);
                 match.setMatchReport(null);
                 match.setManOfTheMatch(null);
-                if (match.getGoals() != null) {
-                    match.getGoals().clear();
-                }
+                // Don't clear goals for pending matches - they might have goals from live updates
             }
         }
     }

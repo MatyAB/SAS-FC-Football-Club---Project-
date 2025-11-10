@@ -33,6 +33,7 @@ com\sasfc\api\repository\PlayerRepository.class
 com\sasfc\api\dto\CreateNewsRequest.class
 com\sasfc\api\model\Goal.class
 com\sasfc\api\controller\SponsorController.class
+com\sasfc\api\service\MatchService$1.class
 com\sasfc\api\repository\NewsRepository.class
 com\sasfc\api\dto\TeamDto.class
 com\sasfc\api\exception\FileStorageException.class

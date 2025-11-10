@@ -1,6 +1,7 @@
 package com.sasfc.api.dto;
 
 import com.sasfc.api.model.enums.PlayerPosition;
+import com.sasfc.api.model.enums.TeamCategory;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,7 +13,8 @@ public class PlayerDto {
     private UUID id;
     private String name;
     private PlayerPosition position;
-    private int jerseyNumber;
+    private TeamCategory teamCategory;
+    private Integer jerseyNumber; // Changed to Integer to allow null for staff
     private int age;
     private String nationality;
     private String bio;
@@ -27,9 +29,9 @@ public class PlayerDto {
 
     private Double height;
     private Double weight;
-    
+
     // Using String for the enum in the DTO is good practice for APIs
-    private String preferredFoot; 
+    private String preferredFoot;
 
     // Overall career stats
     private Integer matchesPlayed;
@@ -42,6 +44,22 @@ public class PlayerDto {
     private Double tackleSuccessRate;
 
     private String careerHighlights;
+
+    // Staff-specific fields
+    private String staffId;
+    private String role;
+    private String specialization;
+    private Integer yearsOfExperience;
+    private String qualifications;
+    private String coachingLicense;
+    private String previousClubs;
+    private Integer playersTrained;
+    private Double successRate;
+    private Double teamWinRate;
+    private Double coachingEffectiveness;
+    private Double playerDevelopment;
+    private Integer expertiseLevel;
+    private String careerAchievements;
 
     private String imageUrl2;
     private String imageUrl3;

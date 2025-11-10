@@ -1,75 +1,75 @@
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\FileStorageProperties.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\MultipartConfigCustom.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\SecurityConfig.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\StringToPreferredFootConverter.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\WebConfig.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\AdminController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\AuthController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\GalleryImageController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\MatchController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\NewsController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\PlayerController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\SponsorController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\TeamController.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateMatchRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateNewsRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreatePermissionRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateRoleRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateSponsorRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateUserRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\GalleryImageDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\GoalDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\LoginRequest.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\LoginResponse.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\MatchDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\MatchRequestDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\NewsDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\PermissionDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\PlayerDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\RoleDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\TeamDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\UserDto.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\DuplicateResourceException.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\FileStorageException.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\ResourceNotFoundException.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\mapper\ContentMapper.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\mapper\UserMapper.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\GalleryCategory.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\MatchStatus.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\NewsCategory.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\PlayerPosition.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\PreferredFoot.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\SponsorCategory.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\TeamCategory.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\GalleryImage.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Goal.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Match.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\News.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Permission.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Player.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Role.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Sponsor.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Team.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\User.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\GalleryImageRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\GoalRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\MatchRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\NewsRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\PermissionRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\PlayerRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\RoleRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\SponsorRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\TeamRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\UserRepository.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\SasFcApiApplication.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\security\JwtUtil.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\FileStorageService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\GalleryImageService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\MatchService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\NewsService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\PlayerService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\SponsorService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\TeamService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\UserService.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\ServletInitializer.java
-E:\MyProjects\Maty\sas_fc\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\util\DataInitializer.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\FileStorageProperties.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\MultipartConfigCustom.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\SecurityConfig.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\StringToPreferredFootConverter.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\config\WebConfig.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\AdminController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\AuthController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\GalleryImageController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\MatchController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\NewsController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\PlayerController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\SponsorController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\controller\TeamController.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateMatchRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateNewsRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreatePermissionRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateRoleRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateSponsorRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\CreateUserRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\GalleryImageDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\GoalDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\LoginRequest.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\LoginResponse.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\MatchDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\MatchRequestDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\NewsDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\PermissionDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\PlayerDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\RoleDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\TeamDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\dto\UserDto.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\DuplicateResourceException.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\FileStorageException.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\exception\ResourceNotFoundException.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\mapper\ContentMapper.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\mapper\UserMapper.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\GalleryCategory.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\MatchStatus.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\NewsCategory.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\PlayerPosition.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\PreferredFoot.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\SponsorCategory.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\enums\TeamCategory.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\GalleryImage.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Goal.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Match.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\News.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Permission.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Player.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Role.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Sponsor.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\Team.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\model\User.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\GalleryImageRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\GoalRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\MatchRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\NewsRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\PermissionRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\PlayerRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\RoleRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\SponsorRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\TeamRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\repository\UserRepository.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\SasFcApiApplication.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\security\JwtUtil.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\FileStorageService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\GalleryImageService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\MatchService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\NewsService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\PlayerService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\SponsorService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\TeamService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\service\UserService.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\ServletInitializer.java
+C:\Users\siinq\OneDrive\Desktop\Projects\koo\bulbula amen\SAS-FC-Football-Club---Project-\src\main\java\com\sasfc\api\util\DataInitializer.java

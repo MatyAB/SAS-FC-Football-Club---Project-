@@ -6,15 +6,13 @@ import java.util.UUID;
 @Data
 public class GoalDto {
 
-    private Long id; // Useful for responses
+    private Long id; 
 
-    // For creating/updating, the client sends these IDs
     private UUID scorerPlayerId;
-    private UUID assistPlayerId; // Can be null if there was no assist
-
-    // For responses, we can include names for easier display on the front-end
+    private UUID assistPlayerId; 
     private String scorerName;
     private String assistPlayerName;
-
     private Integer minuteScored;
+    private UUID teamId;
+    private String teamName;
 }

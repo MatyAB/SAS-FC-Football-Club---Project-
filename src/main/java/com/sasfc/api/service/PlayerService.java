@@ -109,6 +109,7 @@ public class PlayerService {
         dto.setId(player.getId());
         dto.setName(player.getName());
         dto.setPosition(player.getPosition());
+        dto.setTeamCategory(player.getTeamCategory());
         dto.setJerseyNumber(player.getJerseyNumber());
         dto.setAge(player.getAge());
         dto.setNationality(player.getNationality());
@@ -133,6 +134,22 @@ public class PlayerService {
         dto.setImageUrl2(player.getImageUrl2());
         dto.setImageUrl3(player.getImageUrl3());
 
+        // Staff-specific fields
+        dto.setStaffId(player.getStaffId());
+        dto.setRole(player.getRole());
+        dto.setSpecialization(player.getSpecialization());
+        dto.setYearsOfExperience(player.getYearsOfExperience());
+        dto.setQualifications(player.getQualifications());
+        dto.setCoachingLicense(player.getCoachingLicense());
+        dto.setPreviousClubs(player.getPreviousClubs());
+        dto.setPlayersTrained(player.getPlayersTrained());
+        dto.setSuccessRate(player.getSuccessRate());
+        dto.setTeamWinRate(player.getTeamWinRate());
+        dto.setCoachingEffectiveness(player.getCoachingEffectiveness());
+        dto.setPlayerDevelopment(player.getPlayerDevelopment());
+        dto.setExpertiseLevel(player.getExpertiseLevel());
+        dto.setCareerAchievements(player.getCareerAchievements());
+
         // Team mapping
         if (player.getTeam() != null) {
             TeamDto teamDto = new TeamDto();
@@ -149,6 +166,7 @@ public class PlayerService {
     private void fromDtoToEntity(Player player, PlayerDto dto) {
         player.setName(dto.getName());
         player.setPosition(dto.getPosition());
+        player.setTeamCategory(dto.getTeamCategory());
         player.setJerseyNumber(dto.getJerseyNumber());
         player.setAge(dto.getAge());
         player.setNationality(dto.getNationality());
@@ -170,10 +188,33 @@ public class PlayerService {
         player.setTackleSuccessRate(dto.getTackleSuccessRate());
         player.setCareerHighlights(dto.getCareerHighlights());
 
+        // Staff-specific fields
+        player.setStaffId(dto.getStaffId());
+        player.setRole(dto.getRole());
+        player.setSpecialization(dto.getSpecialization());
+        player.setYearsOfExperience(dto.getYearsOfExperience());
+        player.setQualifications(dto.getQualifications());
+        player.setCoachingLicense(dto.getCoachingLicense());
+        player.setPreviousClubs(dto.getPreviousClubs());
+        player.setPlayersTrained(dto.getPlayersTrained());
+        player.setSuccessRate(dto.getSuccessRate());
+        player.setTeamWinRate(dto.getTeamWinRate());
+        player.setCoachingEffectiveness(dto.getCoachingEffectiveness());
+        player.setPlayerDevelopment(dto.getPlayerDevelopment());
+        player.setExpertiseLevel(dto.getExpertiseLevel());
+        player.setCareerAchievements(dto.getCareerAchievements());
+
+        // Handle PreferredFoot - make it optional
+        if (dto.getPreferredFoot() != null && !dto.getPreferredFoot().trim().isEmpty()) {
+            player.setPreferredFoot(PreferredFoot.valueOf(dto.getPreferredFoot().toUpperCase()));
+        } else {
+            player.setPreferredFoot(null);
+        }
+
         // Team relation
         if (dto.getTeamId() != null) {
             Team team = teamRepository.findById(dto.getTeamId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Team not found with id: " + dto.getTeamId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Team not found with id: " + dto.getTeamId()));
             player.setTeam(team);
         } else {
             player.setTeam(null);

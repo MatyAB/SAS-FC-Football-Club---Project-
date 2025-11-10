@@ -1,5 +1,6 @@
 package com.sasfc.api.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sasfc.api.dto.PlayerDto;
 import com.sasfc.api.model.Player;
 import com.sasfc.api.model.enums.PreferredFoot;
@@ -21,14 +22,24 @@ public class PlayerController {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private ObjectMapper objectMapper; // Add this
+
     // The request to this endpoint will be of type "multipart/form-data"
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PlayerDto> createPlayer(
-            @RequestPart("player") PlayerDto playerDto,
+            @RequestPart("player") String playerJson, // Change to String
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart(value = "image2", required = false) MultipartFile image2,
             @RequestPart(value = "image3", required = false) MultipartFile image3) {
-        
+
+        PlayerDto playerDto;
+        try {
+            playerDto = objectMapper.readValue(playerJson, PlayerDto.class);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Player createdPlayer = playerService.createPlayer(playerDto, image, image2, image3);
         // It's best practice to return the DTO representation
         return new ResponseEntity<>(toPlayerDto(createdPlayer), HttpStatus.CREATED);
@@ -61,12 +72,19 @@ public class PlayerController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PlayerDto> updatePlayer(
-            @PathVariable UUID id, 
-            @RequestPart("player") PlayerDto playerDto, 
+            @PathVariable UUID id,
+            @RequestPart("player") String playerJson, // Change to String
             @RequestPart(value = "image", required = false) MultipartFile image,
             @RequestPart(value = "image2", required = false) MultipartFile image2,
             @RequestPart(value = "image3", required = false) MultipartFile image3) {
-        
+
+        PlayerDto playerDto;
+        try {
+            playerDto = objectMapper.readValue(playerJson, PlayerDto.class);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Player updatedPlayer = playerService.updatePlayer(id, playerDto, image, image2, image3);
         return ResponseEntity.ok(toPlayerDto(updatedPlayer));
     }
@@ -84,6 +102,7 @@ public class PlayerController {
         dto.setId(player.getId());
         dto.setName(player.getName());
         dto.setPosition(player.getPosition());
+        dto.setTeamCategory(player.getTeamCategory());
         dto.setJerseyNumber(player.getJerseyNumber());
         dto.setAge(player.getAge());
         dto.setNationality(player.getNationality());
@@ -105,6 +124,23 @@ public class PlayerController {
         dto.setCareerHighlights(player.getCareerHighlights());
         dto.setImageUrl2(player.getImageUrl2());
         dto.setImageUrl3(player.getImageUrl3());
+
+        // Staff-specific fields
+        dto.setStaffId(player.getStaffId());
+        dto.setRole(player.getRole());
+        dto.setSpecialization(player.getSpecialization());
+        dto.setYearsOfExperience(player.getYearsOfExperience());
+        dto.setQualifications(player.getQualifications());
+        dto.setCoachingLicense(player.getCoachingLicense());
+        dto.setPreviousClubs(player.getPreviousClubs());
+        dto.setPlayersTrained(player.getPlayersTrained());
+        dto.setSuccessRate(player.getSuccessRate());
+        dto.setTeamWinRate(player.getTeamWinRate());
+        dto.setCoachingEffectiveness(player.getCoachingEffectiveness());
+        dto.setPlayerDevelopment(player.getPlayerDevelopment());
+        dto.setExpertiseLevel(player.getExpertiseLevel());
+        dto.setCareerAchievements(player.getCareerAchievements());
+
         if (player.getTeam() != null) {
             com.sasfc.api.dto.TeamDto t = new com.sasfc.api.dto.TeamDto();
             t.setId(player.getTeam().getId());

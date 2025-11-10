@@ -92,6 +92,20 @@ public class MatchController {
                     goalDto.setAssistPlayerId(goal.getAssistedBy().getId());
                     goalDto.setAssistPlayerName(goal.getAssistedBy().getName());
                 }
+                if (goal.getTeam() != null) {
+                    try {
+                        goalDto.setTeamId(goal.getTeam().getId());
+                        goalDto.setTeamName(goal.getTeam().getName());
+                    } catch (Exception e) {
+                        // Handle cases where team proxy might be invalid
+                        goalDto.setTeamId(null);
+                        goalDto.setTeamName(null);
+                    }
+                } else {
+                    // Handle cases where team might be null (legacy data)
+                    goalDto.setTeamId(null);
+                    goalDto.setTeamName(null);
+                }
                 return goalDto;
             }).collect(Collectors.toList()));
         } else {
