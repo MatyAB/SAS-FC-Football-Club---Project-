@@ -1,10 +1,11 @@
 package com.sasfc.api.controller;
 
-import com.sasfc.api.dto.CreateUserRequest;
-import com.sasfc.api.dto.RoleDto;
-import com.sasfc.api.dto.UserDto;
+import com.sasfc.api.dto.*;
 import com.sasfc.api.mapper.UserMapper;
+import com.sasfc.api.model.Permission;
+import com.sasfc.api.model.Role;
 import com.sasfc.api.model.User;
+import com.sasfc.api.repository.PermissionRepository;
 import com.sasfc.api.repository.RoleRepository;
 import com.sasfc.api.service.UserService;
 import jakarta.validation.Valid;
@@ -24,11 +25,13 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
     @Autowired
-    public AdminController(UserService userService, RoleRepository roleRepository) {
+    public AdminController(UserService userService, RoleRepository roleRepository, PermissionRepository permissionRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
+        this.permissionRepository = permissionRepository;
     }
 
     // --- User Management Endpoints ---
@@ -67,6 +70,40 @@ public class AdminController {
                 .map(UserMapper::toRoleDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(roles);
+    }
+
+    // --- Permission Management Endpoints ---
+
+    @GetMapping("/permissions")
+    public ResponseEntity<List<PermissionDto>> getAllPermissions() {
+        List<PermissionDto> permissions = permissionRepository.findAll().stream()
+                .map(UserMapper::toPermissionDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(permissions);
+    }
+
+    @PostMapping("/roles")
+    public ResponseEntity<RoleDto> createRole(@Valid @RequestBody CreateRoleRequest request) {
+        Role newRole = userService.createRole(request);
+        return new ResponseEntity<>(UserMapper.toRoleDto(newRole), HttpStatus.CREATED);
+    }
+
+    // --- Role-Permission Management ---
+
+    @PostMapping("/roles/{roleId}/permissions/{permissionId}")
+    public ResponseEntity<RoleDto> assignPermissionToRole(
+            @PathVariable Long roleId,
+            @PathVariable Long permissionId) {
+        Role updatedRole = userService.assignPermissionToRole(roleId, permissionId);
+        return ResponseEntity.ok(UserMapper.toRoleDto(updatedRole));
+    }
+
+    @DeleteMapping("/roles/{roleId}/permissions/{permissionId}")
+    public ResponseEntity<RoleDto> removePermissionFromRole(
+            @PathVariable Long roleId,
+            @PathVariable Long permissionId) {
+        Role updatedRole = userService.removePermissionFromRole(roleId, permissionId);
+        return ResponseEntity.ok(UserMapper.toRoleDto(updatedRole));
     }
 
 
